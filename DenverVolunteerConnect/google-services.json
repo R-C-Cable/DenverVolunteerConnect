@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "146442323979",
+    "project_id": "denvervolunteerconnect-2e275",
+    "storage_bucket": "denvervolunteerconnect-2e275.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:146442323979:android:0ac762ce33ec357930df0e",
+        "android_client_info": {
+          "package_name": "com.example.denvervolunteerconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "146442323979-ducnm4u90o33ms6liq6dpsvi9uh6hqqd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLNLvMfxl2Gf-VSEgj-ensnUHKjHU5KSI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "146442323979-cp8dv7keh96ploigk4elmrklctojd739.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

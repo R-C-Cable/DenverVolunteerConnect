@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "DenverVolunteerConnect"
-include ':app'
+include ':DenverVolunteerConnect'
