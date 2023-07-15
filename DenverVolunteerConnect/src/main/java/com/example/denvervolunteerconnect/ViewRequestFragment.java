@@ -9,11 +9,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.denvervolunteerconnect.databinding.FragmentFirstBinding;
+import com.example.denvervolunteerconnect.databinding.ViewRequestFragmentBinding;
 
-public class FirstFragment extends Fragment {
+public class ViewRequestFragment extends Fragment {
 
-    private FragmentFirstBinding binding;
+    private ViewRequestFragmentBinding viewRequestFragmentBinding;
 
     @Override
     public View onCreateView(
@@ -21,19 +21,19 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        binding = FragmentFirstBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        viewRequestFragmentBinding = ViewRequestFragmentBinding.inflate(inflater, container, false);
+        return viewRequestFragmentBinding.getRoot();
 
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonFirst.setOnClickListener(new View.OnClickListener() {
+        viewRequestFragmentBinding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                NavHostFragment.findNavController(ViewRequestFragment.this)
+                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
     }
@@ -41,7 +41,7 @@ public class FirstFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+        viewRequestFragmentBinding = null;
     }
 
 }
