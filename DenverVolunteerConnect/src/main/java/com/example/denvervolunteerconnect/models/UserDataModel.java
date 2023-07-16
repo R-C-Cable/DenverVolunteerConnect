@@ -1,19 +1,18 @@
-package com.example.denvervolunteerconnect.googleauth;
+package com.example.denvervolunteerconnect.models;
 
 import utils.Constants;
 
-public class UserData {
-    private String userId = null;
-    private String userName = null;
-    private String profilePictureUrl = null;
+public class UserDataModel {
+    private String userId;
+    private String userName;
+    private String profilePictureUrl;
 
-    public UserData(String userId, String userName, String profilePictureUrl) {
+    public UserDataModel(String firebaseKey, String userId, String userName, String profilePictureUrl) {
         this.userId = userId;
         this.userName = userName;
         this.profilePictureUrl = profilePictureUrl;
     }
-
-    public UserData() {
+    public UserDataModel() {
         this.userId = Constants.Strings.RESULT_FAILED;
         this.userName = Constants.Strings.RESULT_FAILED;
         this.profilePictureUrl = Constants.Strings.RESULT_FAILED;
@@ -45,7 +44,7 @@ public class UserData {
 
     @Override
     public String toString() {
-        return "UserData{" +
+        return "UserDataModel{" +
                 "userId='" + userId + '\'' +
                 ", userName='" + userName + '\'' +
                 ", profilePictureUrl='" + profilePictureUrl + '\'' +

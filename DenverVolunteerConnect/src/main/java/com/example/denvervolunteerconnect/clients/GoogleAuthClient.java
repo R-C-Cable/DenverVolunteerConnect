@@ -1,4 +1,4 @@
-package com.example.denvervolunteerconnect.googleauth;
+package com.example.denvervolunteerconnect.clients;
 
 import android.content.Context;
 import android.content.Intent;

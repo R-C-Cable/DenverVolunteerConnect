@@ -3,8 +3,9 @@ package com.example.denvervolunteerconnect;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.denvervolunteerconnect.ViewModels.UserDataViewModel;
-import com.example.denvervolunteerconnect.googleauth.GoogleAuthClient;
+import com.example.denvervolunteerconnect.ViewModels.EditRequestViewModel;
+import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
+import com.example.denvervolunteerconnect.clients.GoogleAuthClient;
 
 import androidx.annotation.MainThread;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +21,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.denvervolunteerconnect.databinding.ActivityMainBinding;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,45 +31,37 @@ import utils.Constants;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private UserDataViewModel mUserDataViewModel = null;
+    private EditRequestViewModel mEditRequestViewModel = null;
     private AppBarConfiguration appBarConfiguration = null;
     private ActivityMainBinding mMainActivityBinding = null;
+    private FirebaseAnalytics mFirebaseAnalytics;
     private GoogleAuthClient mGoogleAuthClient = null;
-    private FirebaseDatabase mFirebaseDatabase = null;
+    private FirebaseDatabaseClient mFirebaseDatabaseClient = null;
     private static final int RC_SIGN_IN = 9001;
-
-    //FireBase member variables
-    private FirebaseAnalytics mAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate");
-        mAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mGoogleAuthClient = GoogleAuthClient.getInstance(getApplicationContext());
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabaseClient = FirebaseDatabaseClient.getInstance();
+        mEditRequestViewModel =  mEditRequestViewModel = new ViewModelProvider(this).get(EditRequestViewModel.class);
+
         mMainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
-        mUserDataViewModel =  mUserDataViewModel = new ViewModelProvider(this).get(UserDataViewModel.class);
         setContentView(mMainActivityBinding.getRoot());
         setSupportActionBar(mMainActivityBinding.toolbar);
-
-        // TESTING LOGIC
-        DatabaseReference myRef = mFirebaseDatabase.getReference("message");
-
-        myRef.setValue("Hello, World!");
-        // END TESTING LOGIC
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        GoogleAuthClient.signOut(); // TODO: Remove testing logic.
+//        GoogleAuthClient.signOut(); // TODO: Remove testing logic.
 
         // Check if user is signed in else, requires a Google Login to processed.
         FirebaseUser currentUser = mGoogleAuthClient.getSignedInFirebaseUser();
@@ -99,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "onDestroy");
         GoogleAuthClient.cleanUp();
         mGoogleAuthClient = null;
+        FirebaseDatabaseClient.cleanUp();
+        mFirebaseDatabaseClient = null;
     }
 
     @Override
@@ -109,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 == mGoogleAuthClient.handleLogInResult(requestCode, resultCode, data))
         {
             Log.v(TAG, "Logged in Success");
-            // TODO: Update the database with the new UserData.
+            // TODO: Update the database with the new UserDataModel.
         } else {
             Log.w(TAG, "Closing application due to failure to login");
             //TODO: add logic to notify the user of the failure, and allow them to retry.

@@ -1,6 +1,5 @@
 package com.example.denvervolunteerconnect.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,36 +12,32 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.denvervolunteerconnect.MainActivity;
 import com.example.denvervolunteerconnect.R;
-import com.example.denvervolunteerconnect.ViewModels.UserDataViewModel;
+import com.example.denvervolunteerconnect.ViewModels.EditRequestViewModel;
 import com.example.denvervolunteerconnect.databinding.BrowsingFragmentBinding;
-import com.example.denvervolunteerconnect.googleauth.GoogleAuthClient;
-import com.example.denvervolunteerconnect.googleauth.UserData;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Objects;
-import java.util.concurrent.Executors;
+import com.example.denvervolunteerconnect.clients.GoogleAuthClient;
+import com.example.denvervolunteerconnect.models.UserDataModel;
 
 @MainThread
 public class BrowsingFragment extends Fragment {
 
     private static final String TAG = BrowsingFragment.class.getSimpleName();
     private BrowsingFragmentBinding mBrowsingFragmentBinding = null;
-    private UserDataViewModel mUserDataViewModel = null;
+    private EditRequestViewModel mEditRequestViewModel = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d(TAG,"onCreate");
+        Log.v(TAG,"onCreate");
         super.onCreate(savedInstanceState);
-        mUserDataViewModel = new ViewModelProvider(requireActivity()).get(UserDataViewModel.class);
-        mUserDataViewModel.startUserDataUpdate(requireActivity().getApplicationContext());
-        setupUserDataObserver();
+        mEditRequestViewModel = new ViewModelProvider(requireActivity()).get(EditRequestViewModel.class);
+        mEditRequestViewModel.startUserDataUpdate(requireActivity().getApplicationContext());
+
+        //TODO: REMOVING THIS TESTING LOGIC
+        Log.e(TAG, String.valueOf(mEditRequestViewModel.getLiveUserData().hasActiveObservers()));
+        // END TESTING LOGIC.
     }
 
     @Override
@@ -50,14 +45,15 @@ public class BrowsingFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        Log.v(TAG, "onCreateView");
         mBrowsingFragmentBinding = BrowsingFragmentBinding.inflate(inflater, container, false);
         return mBrowsingFragmentBinding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        Log.v(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-        mBrowsingFragmentBinding.userNameText.setText("UserName will go here.");
 
         mBrowsingFragmentBinding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,35 +74,44 @@ public class BrowsingFragment extends Fragment {
     public void onStart() {
         Log.v(TAG, "onStart");
         super.onStart();
+        setupUserDataObserver();
+
     }
 
     @Override
     public void onStop() {
         Log.v(TAG, "onStop");
         super.onStop();
+        mEditRequestViewModel.getLiveUserData().removeObservers(this);
     }
 
     @Override
     public void onDestroy() {
+        Log.v(TAG,"onDestroy");
         super.onDestroy();
-        mUserDataViewModel.getLiveUserData().removeObservers(this);
     }
 
     @Override
     public void onDestroyView() {
+        Log.v(TAG,"onDestroyView");
         super.onDestroyView();
-        mUserDataViewModel = null;
+        mEditRequestViewModel = null;
         mBrowsingFragmentBinding = null;
     }
 
     private void setupUserDataObserver() {
         Log.v(TAG, "setupUserDataObserver");
-        mUserDataViewModel.getLiveUserData().observe(requireActivity(), new Observer<UserData>() {
+        mEditRequestViewModel.getLiveUserData().observe(requireActivity(), new Observer<UserDataModel>() {
             @Override
-            public void onChanged(UserData userData) {
-                Log.v(TAG, "getLiveUserData#onChanged()");
-                TextView userNameText = mBrowsingFragmentBinding.userNameText;
-                userNameText.setText(userData.getUserName());
+            public void onChanged(UserDataModel userData) {
+                try {
+                    Log.v(TAG, "getLiveUserData#onChanged()");
+                    TextView userNameText = mBrowsingFragmentBinding.userNameText;
+                    userNameText.setText(userData.getUserName());
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to update UI with user name");
+                    e.printStackTrace();
+                }
             }
         });
     }
