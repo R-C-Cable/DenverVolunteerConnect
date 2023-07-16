@@ -1,10 +1,12 @@
 package utils;
 
-public class Constants {
-    interface STRING {
-        String RESULT_FAILED = "FAILED";
+public interface Constants {
+    interface Strings {
+        java.lang.String RESULT_FAILED = "FAILED";
+        java.lang.String RESULT_SUCCESS = "SUCCESS";
     }
-    interface INTEGER {
-        Integer RESULT_FAILED = -1;
+    interface Integers {
+        int RESULT_FAILED = -1;
+        int RESULT_SUCCESS = 0;
     }
 }

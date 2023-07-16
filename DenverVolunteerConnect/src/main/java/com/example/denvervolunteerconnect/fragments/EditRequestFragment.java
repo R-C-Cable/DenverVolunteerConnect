@@ -1,19 +1,22 @@
-package com.example.denvervolunteerconnect;
+package com.example.denvervolunteerconnect.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.denvervolunteerconnect.databinding.ViewRequestFragmentBinding;
+import com.example.denvervolunteerconnect.R;
+import com.example.denvervolunteerconnect.databinding.EditRequestFragmentBinding;
 
-public class ViewRequestFragment extends Fragment {
+@MainThread
+public class EditRequestFragment extends Fragment {
 
-    private ViewRequestFragmentBinding viewRequestFragmentBinding;
+    private EditRequestFragmentBinding editRequestFragmentBinding;
 
     @Override
     public View onCreateView(
@@ -21,18 +24,18 @@ public class ViewRequestFragment extends Fragment {
             Bundle savedInstanceState
     ) {
 
-        viewRequestFragmentBinding = ViewRequestFragmentBinding.inflate(inflater, container, false);
-        return viewRequestFragmentBinding.getRoot();
+        editRequestFragmentBinding = EditRequestFragmentBinding.inflate(inflater, container, false);
+        return editRequestFragmentBinding.getRoot();
 
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewRequestFragmentBinding.buttonSecond.setOnClickListener(new View.OnClickListener() {
+        editRequestFragmentBinding.buttonSecond.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(ViewRequestFragment.this)
+                NavHostFragment.findNavController(EditRequestFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
@@ -41,7 +44,7 @@ public class ViewRequestFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        viewRequestFragmentBinding = null;
+        editRequestFragmentBinding = null;
     }
 
 }
