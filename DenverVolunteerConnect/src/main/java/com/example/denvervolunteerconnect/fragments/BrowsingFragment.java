@@ -56,13 +56,7 @@ public class BrowsingFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 NavHostFragment.findNavController(BrowsingFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
-            }
-        });
-        mBrowsingFragmentBinding.signOutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                GoogleAuthClient googleAuthClient = GoogleAuthClient.getInstance(getContext());
+                        .navigate(R.id.start_create_request_flow);
             }
         });
     }
@@ -99,7 +93,6 @@ public class BrowsingFragment extends Fragment {
             @Override
             public void onChanged(UserDataModel userData) {
                 try {
-                    Log.v(TAG, "ROBERT startUserObserver#onChanged");
                     TextView userNameText = mBrowsingFragmentBinding.userNameText;
                     userNameText.setText(userData.getUserName());
                 } catch (Exception e) {

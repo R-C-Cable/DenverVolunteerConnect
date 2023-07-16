@@ -6,7 +6,7 @@ import utils.Constants;
  * RequestModel model
  */
 public class RequestModel {
-    private String requestId;
+    private String uniqueId;
     private String title;
     private String location;
     private String description;
@@ -15,21 +15,21 @@ public class RequestModel {
 
 
     public RequestModel() {
-        this.requestId = Constants.Strings.RESULT_FAILED;
+        this.uniqueId = Constants.Strings.RESULT_FAILED;
         this.title = Constants.Strings.RESULT_FAILED;
         this.location = Constants.Strings.RESULT_FAILED;
         this.description = Constants.Strings.RESULT_FAILED;
     }
 
     public RequestModel(
-            String requestId,
+            String uniqueId,
             String title,
             String location,
             String description,
             String requesterId,
             String volunteerId
     ) {
-        this.requestId = requestId;
+        this.uniqueId = uniqueId;
         this.title = title;
         this.location = location;
         this.description = description;
@@ -37,12 +37,12 @@ public class RequestModel {
         this.volunteerId = volunteerId;
     }
 
-    public String getRequestId() {
-        return requestId;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     public String getTitle() {
@@ -88,7 +88,7 @@ public class RequestModel {
     @Override
     public String toString() {
         return "RequestModel{" +
-                "requestId='" + requestId + '\'' +
+                "requestId='" + uniqueId + '\'' +
                 ", title='" + title + '\'' +
                 ", location='" + location + '\'' +
                 ", description='" + description + '\'' +

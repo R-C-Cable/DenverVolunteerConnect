@@ -14,7 +14,7 @@ import com.example.denvervolunteerconnect.R;
 import com.example.denvervolunteerconnect.databinding.EditRequestFragmentBinding;
 
 @MainThread
-public class EditRequestFragment extends Fragment {
+public class RequestManagementFragment extends Fragment {
 
     private EditRequestFragmentBinding editRequestFragmentBinding;
 
@@ -32,10 +32,10 @@ public class EditRequestFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        editRequestFragmentBinding.buttonSecond.setOnClickListener(new View.OnClickListener() {
+        editRequestFragmentBinding.requestActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(EditRequestFragment.this)
+                NavHostFragment.findNavController(RequestManagementFragment.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
             }
         });
