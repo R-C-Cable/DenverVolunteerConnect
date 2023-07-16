@@ -130,18 +130,18 @@ public class GoogleAuthClient {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
-                            updateUI(user);
+                            postUserToDatabase(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            updateUI(null);
+                            postUserToDatabase(null);
                         }
                     }
                 });
     }
 
-    private void updateUI(FirebaseUser user) {
-        //TODO: Post back to view model
+    private void postUserToDatabase(FirebaseUser firebaseUser) {
+        FirebaseDatabaseClient.getInstance().postUserData(firebaseUser);
     }
 
 

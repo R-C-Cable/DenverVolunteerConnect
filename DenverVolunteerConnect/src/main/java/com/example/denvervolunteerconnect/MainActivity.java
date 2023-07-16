@@ -3,7 +3,7 @@ package com.example.denvervolunteerconnect;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.denvervolunteerconnect.ViewModels.EditRequestViewModel;
+import com.example.denvervolunteerconnect.ViewModels.BrowsingViewModel;
 import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
 import com.example.denvervolunteerconnect.clients.GoogleAuthClient;
 
@@ -31,7 +31,7 @@ import utils.Constants;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private EditRequestViewModel mEditRequestViewModel = null;
+    private BrowsingViewModel mBrowsingViewModel = null;
     private AppBarConfiguration appBarConfiguration = null;
     private ActivityMainBinding mMainActivityBinding = null;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -43,10 +43,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate");
+        // Not all of the member object are used in MainActivity,
+        // but having them in this class will prevent them from being garbage collected
+        // while the application is running, and if future proof MainActivity.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mGoogleAuthClient = GoogleAuthClient.getInstance(getApplicationContext());
         mFirebaseDatabaseClient = FirebaseDatabaseClient.getInstance();
-        mEditRequestViewModel =  mEditRequestViewModel = new ViewModelProvider(this).get(EditRequestViewModel.class);
+        mBrowsingViewModel =  mBrowsingViewModel = new ViewModelProvider(this).get(BrowsingViewModel.class);
 
         mMainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mMainActivityBinding.getRoot());
@@ -61,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-//        GoogleAuthClient.signOut(); // TODO: Remove testing logic.
-
         // Check if user is signed in else, requires a Google Login to processed.
         FirebaseUser currentUser = mGoogleAuthClient.getSignedInFirebaseUser();
         if (currentUser == null) {
@@ -101,8 +102,7 @@ public class MainActivity extends AppCompatActivity {
         if (Constants.Integers.RESULT_SUCCESS
                 == mGoogleAuthClient.handleLogInResult(requestCode, resultCode, data))
         {
-            Log.v(TAG, "Logged in Success");
-            // TODO: Update the database with the new UserDataModel.
+            Log.v(TAG, "Logged in Success, posting user data to Firebase.");
         } else {
             Log.w(TAG, "Closing application due to failure to login");
             //TODO: add logic to notify the user of the failure, and allow them to retry.

@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.denvervolunteerconnect.R;
-import com.example.denvervolunteerconnect.ViewModels.EditRequestViewModel;
+import com.example.denvervolunteerconnect.ViewModels.BrowsingViewModel;
 import com.example.denvervolunteerconnect.databinding.BrowsingFragmentBinding;
 import com.example.denvervolunteerconnect.clients.GoogleAuthClient;
 import com.example.denvervolunteerconnect.models.UserDataModel;
@@ -26,18 +26,15 @@ public class BrowsingFragment extends Fragment {
 
     private static final String TAG = BrowsingFragment.class.getSimpleName();
     private BrowsingFragmentBinding mBrowsingFragmentBinding = null;
-    private EditRequestViewModel mEditRequestViewModel = null;
+    private BrowsingViewModel mBrowsingViewModel = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.v(TAG,"onCreate");
         super.onCreate(savedInstanceState);
-        mEditRequestViewModel = new ViewModelProvider(requireActivity()).get(EditRequestViewModel.class);
-        mEditRequestViewModel.startUserDataUpdate(requireActivity().getApplicationContext());
-
-        //TODO: REMOVING THIS TESTING LOGIC
-        Log.e(TAG, String.valueOf(mEditRequestViewModel.getLiveUserData().hasActiveObservers()));
-        // END TESTING LOGIC.
+        mBrowsingViewModel = new ViewModelProvider(requireActivity()).get(BrowsingViewModel.class);
+        mBrowsingViewModel.startUserDataObserver(this);
+        startUserObserver();
     }
 
     @Override
@@ -74,15 +71,13 @@ public class BrowsingFragment extends Fragment {
     public void onStart() {
         Log.v(TAG, "onStart");
         super.onStart();
-        setupUserDataObserver();
-
     }
 
     @Override
     public void onStop() {
         Log.v(TAG, "onStop");
         super.onStop();
-        mEditRequestViewModel.getLiveUserData().removeObservers(this);
+        mBrowsingViewModel.getLiveUserData().removeObservers(this);
     }
 
     @Override
@@ -95,17 +90,16 @@ public class BrowsingFragment extends Fragment {
     public void onDestroyView() {
         Log.v(TAG,"onDestroyView");
         super.onDestroyView();
-        mEditRequestViewModel = null;
+        mBrowsingViewModel = null;
         mBrowsingFragmentBinding = null;
     }
 
-    private void setupUserDataObserver() {
-        Log.v(TAG, "setupUserDataObserver");
-        mEditRequestViewModel.getLiveUserData().observe(requireActivity(), new Observer<UserDataModel>() {
+    private void startUserObserver() {
+        mBrowsingViewModel.getLiveUserData().observe(requireActivity(), new Observer<UserDataModel>() {
             @Override
             public void onChanged(UserDataModel userData) {
                 try {
-                    Log.v(TAG, "getLiveUserData#onChanged()");
+                    Log.v(TAG, "ROBERT startUserObserver#onChanged");
                     TextView userNameText = mBrowsingFragmentBinding.userNameText;
                     userNameText.setText(userData.getUserName());
                 } catch (Exception e) {
