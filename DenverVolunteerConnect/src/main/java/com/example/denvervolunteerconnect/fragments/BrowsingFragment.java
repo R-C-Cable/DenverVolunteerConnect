@@ -14,12 +14,16 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.denvervolunteerconnect.R;
 import com.example.denvervolunteerconnect.ViewModels.BrowsingViewModel;
 import com.example.denvervolunteerconnect.databinding.BrowsingBinding;
-import com.example.denvervolunteerconnect.databinding.VolunteerRequestListItemBinding;
+import com.example.denvervolunteerconnect.models.RequestModel;
 import com.example.denvervolunteerconnect.models.UserDataModel;
+import com.example.denvervolunteerconnect.recyclerview.VolunteerRequestRecyclerViewAdapter;
+
+import java.util.List;
 
 @MainThread
 public class BrowsingFragment extends Fragment {
@@ -27,6 +31,8 @@ public class BrowsingFragment extends Fragment {
     private static final String TAG = BrowsingFragment.class.getSimpleName();
     private BrowsingBinding mBrowsingFragmentBinding = null;
     private BrowsingViewModel mBrowsingViewModel = null;
+    private RecyclerView requestRecyclerView = null;
+    private VolunteerRequestRecyclerViewAdapter requestRecyclerViewAdapter = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,8 +51,14 @@ public class BrowsingFragment extends Fragment {
     ) {
         Log.v(TAG, "onCreateView");
         mBrowsingFragmentBinding = BrowsingBinding.inflate(inflater, container, false);
+        requestRecyclerView = mBrowsingFragmentBinding.volunteerRequestList;
+        requestRecyclerView.setHasFixedSize(false);
+        requestRecyclerViewAdapter = new VolunteerRequestRecyclerViewAdapter(getContext());
+        requestRecyclerView.setAdapter(requestRecyclerViewAdapter);
+
         return mBrowsingFragmentBinding.getRoot();
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -67,6 +79,7 @@ public class BrowsingFragment extends Fragment {
     public void onStart() {
         Log.v(TAG, "onStart");
         super.onStart();
+        requestRecyclerViewAdapter.updateList(List.of(new RequestModel(), new RequestModel()));
     }
 
     @Override
