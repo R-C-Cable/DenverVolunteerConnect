@@ -1,47 +1,43 @@
 package com.example.denvervolunteerconnect.models;
 
+import androidx.annotation.NonNull;
+
+import java.util.Objects;
+
 import utils.Constants;
 
 /**
  * RequestModel model
  */
 public class RequestModel {
-    private String uniqueId;
-    private String title;
-    private String location;
-    private String description;
-    private String requesterId;
-    private String volunteerId;
+    private long uniqueId = Constants.Integers.RESULT_EMPTY;
+    private String title = Constants.Strings.RESULT_EMPTY;
+    private String location = Constants.Strings.RESULT_EMPTY;
+    private String description = Constants.Strings.RESULT_EMPTY;
+    private String requesterId = Constants.Strings.RESULT_EMPTY;
+    private String volunteerId = Constants.Strings.RESULT_EMPTY;
 
 
     public RequestModel() {
-        this.uniqueId = Constants.Strings.RESULT_FAILED;
-        this.title = Constants.Strings.RESULT_FAILED;
-        this.location = Constants.Strings.RESULT_FAILED;
-        this.description = Constants.Strings.RESULT_FAILED;
     }
 
     public RequestModel(
-            String uniqueId,
             String title,
             String location,
             String description,
-            String requesterId,
-            String volunteerId
+            String requesterId
     ) {
-        this.uniqueId = uniqueId;
         this.title = title;
         this.location = location;
         this.description = description;
         this.requesterId = requesterId;
-        this.volunteerId = volunteerId;
     }
 
-    public String getUniqueId() {
+    public long getUniqueId() {
         return uniqueId;
     }
 
-    public void setUniqueId(String uniqueId) {
+    public void setUniqueId(long uniqueId) {
         this.uniqueId = uniqueId;
     }
 
@@ -71,6 +67,10 @@ public class RequestModel {
 
     public String getRequesterId() {
         return requesterId;
+    }
+
+    public boolean requesterIdIsDefault() {
+        return requesterId.equals(Constants.Strings.RESULT_EMPTY);
     }
 
     public void setRequesterId(String requesterId) {

@@ -9,7 +9,7 @@
         android:id="@+id/FirstFragment"
         android:name="com.example.denvervolunteerconnect.fragments.BrowsingFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/browsing_fragment">
+        tools:layout="@layout/browsing">
 
         <action
             android:id="@+id/start_create_request_flow"
@@ -19,7 +19,7 @@
         android:id="@+id/SecondFragment"
         android:name="com.example.denvervolunteerconnect.fragments.RequestManagementFragment"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/edit_request_fragment">
+        tools:layout="@layout/request_management">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"

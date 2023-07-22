@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.denvervolunteerconnect.models.RequestModel;
 import com.example.denvervolunteerconnect.models.UserDataModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -14,6 +15,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.Instant;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -30,6 +33,7 @@ public class FirebaseDatabaseClient {
     private DatabaseReference mRootDatabaseReference = null;
     private DatabaseReference requestEndPointReference = null;
     private DatabaseReference userDataEndPointReference = null;
+
     private FirebaseDatabaseClient() {
         mRootDatabaseReference = FirebaseDatabase.getInstance().getReference();
         requestEndPointReference = mRootDatabaseReference.child("Requests");
@@ -60,7 +64,7 @@ public class FirebaseDatabaseClient {
         INSTANCE = null;
     }
 
-    public LiveData<UserDataModel> onLiveUserDataUpdate() {
+    public LiveData<UserDataModel> liveUserData() {
         return _liveUserData;
     }
 
@@ -85,6 +89,31 @@ public class FirebaseDatabaseClient {
             } else {
                 Log.e(TAG, "Failed to post user data to FirebaseDatabase");
             }
+        });
+    }
+
+    public void setCurrentUser(FirebaseUser firebaseUser) {
+        executorService.execute(() -> {
+            UserDataModel userDataResult
+                    = Utils.convertFirebaseUserToUserDataModel(firebaseUser);
+        });
+    }
+
+    public void postVolunteerRequest(RequestModel requestModel) {
+        requestModel.setUniqueId(Instant.now().toEpochMilli() + new Random().nextLong());
+        Log.v(TAG, requestModel.toString());
+        executorService.submit(() -> {
+            Log.v(TAG, requestModel.toString());
+            requestEndPointReference
+                    .child(String.valueOf(requestModel.getUniqueId()))
+                    .setValue(requestModel)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                        }
+                    });
+
         });
     }
 

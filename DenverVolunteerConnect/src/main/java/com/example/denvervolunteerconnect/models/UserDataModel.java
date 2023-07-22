@@ -3,9 +3,9 @@ package com.example.denvervolunteerconnect.models;
 import utils.Constants;
 
 public class UserDataModel {
-    private String userId;
-    private String userName;
-    private String profilePictureUrl;
+    private String userId = Constants.Strings.RESULT_EMPTY;
+    private String userName = Constants.Strings.RESULT_EMPTY;
+    private String profilePictureUrl = Constants.Strings.RESULT_EMPTY;
 
     public UserDataModel(String firebaseKey, String userId, String userName, String profilePictureUrl) {
         this.userId = userId;
@@ -13,9 +13,6 @@ public class UserDataModel {
         this.profilePictureUrl = profilePictureUrl;
     }
     public UserDataModel() {
-        this.userId = Constants.Strings.RESULT_FAILED;
-        this.userName = Constants.Strings.RESULT_FAILED;
-        this.profilePictureUrl = Constants.Strings.RESULT_FAILED;
     }
 
     public String getUserId() {

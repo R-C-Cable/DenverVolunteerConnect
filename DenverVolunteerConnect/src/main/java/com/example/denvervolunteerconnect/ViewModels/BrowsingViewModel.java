@@ -1,6 +1,7 @@
 package com.example.denvervolunteerconnect.ViewModels;
 
 import androidx.annotation.MainThread;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -15,12 +16,13 @@ public class BrowsingViewModel extends ViewModel {
     private static final String TAG = BrowsingViewModel.class.getSimpleName();
     private MutableLiveData<UserDataModel> _liveUserData = new MutableLiveData<>();
 
+    @Nullable
     public LiveData<UserDataModel> getLiveUserData() {
         return _liveUserData;
     }
 
     public void startUserDataObserver(LifecycleOwner lifecycleOwner) {
-        FirebaseDatabaseClient.getInstance().onLiveUserDataUpdate().observe(
+        FirebaseDatabaseClient.getInstance().liveUserData().observe(
                 lifecycleOwner,
                 new Observer<UserDataModel>() {
             @Override

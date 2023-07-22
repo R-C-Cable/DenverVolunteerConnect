@@ -17,15 +17,15 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.denvervolunteerconnect.R;
 import com.example.denvervolunteerconnect.ViewModels.BrowsingViewModel;
-import com.example.denvervolunteerconnect.databinding.BrowsingFragmentBinding;
-import com.example.denvervolunteerconnect.clients.GoogleAuthClient;
+import com.example.denvervolunteerconnect.databinding.BrowsingBinding;
+import com.example.denvervolunteerconnect.databinding.VolunteerRequestListItemBinding;
 import com.example.denvervolunteerconnect.models.UserDataModel;
 
 @MainThread
 public class BrowsingFragment extends Fragment {
 
     private static final String TAG = BrowsingFragment.class.getSimpleName();
-    private BrowsingFragmentBinding mBrowsingFragmentBinding = null;
+    private BrowsingBinding mBrowsingFragmentBinding = null;
     private BrowsingViewModel mBrowsingViewModel = null;
 
     @Override
@@ -34,7 +34,8 @@ public class BrowsingFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mBrowsingViewModel = new ViewModelProvider(requireActivity()).get(BrowsingViewModel.class);
         mBrowsingViewModel.startUserDataObserver(this);
-        startUserObserver();
+
+
     }
 
     @Override
@@ -43,7 +44,7 @@ public class BrowsingFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         Log.v(TAG, "onCreateView");
-        mBrowsingFragmentBinding = BrowsingFragmentBinding.inflate(inflater, container, false);
+        mBrowsingFragmentBinding = BrowsingBinding.inflate(inflater, container, false);
         return mBrowsingFragmentBinding.getRoot();
     }
 
@@ -51,6 +52,7 @@ public class BrowsingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.v(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
+        this.startUserObserver();
 
         mBrowsingFragmentBinding.buttonFirst.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +73,6 @@ public class BrowsingFragment extends Fragment {
     public void onStop() {
         Log.v(TAG, "onStop");
         super.onStop();
-        mBrowsingViewModel.getLiveUserData().removeObservers(this);
     }
 
     @Override

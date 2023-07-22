@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.denvervolunteerconnect.ViewModels.BrowsingViewModel;
+import com.example.denvervolunteerconnect.ViewModels.RequestManagementViewModel;
 import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
 import com.example.denvervolunteerconnect.clients.GoogleAuthClient;
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private BrowsingViewModel mBrowsingViewModel = null;
+    private RequestManagementViewModel mRequestManagementViewModel = null;
     private AppBarConfiguration appBarConfiguration = null;
     private ActivityMainBinding mMainActivityBinding = null;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -49,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mGoogleAuthClient = GoogleAuthClient.getInstance(getApplicationContext());
         mFirebaseDatabaseClient = FirebaseDatabaseClient.getInstance();
-        mBrowsingViewModel =  mBrowsingViewModel = new ViewModelProvider(this).get(BrowsingViewModel.class);
+        mBrowsingViewModel = new ViewModelProvider(this).get(BrowsingViewModel.class);
+        mRequestManagementViewModel = new ViewModelProvider(this).get(RequestManagementViewModel.class);
 
         mMainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mMainActivityBinding.getRoot());
@@ -64,13 +67,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        // Check if user is signed in else, requires a Google Login to processed.
-        FirebaseUser currentUser = mGoogleAuthClient.getSignedInFirebaseUser();
-        if (currentUser == null) {
-            startActivityForResult(mGoogleAuthClient.getSignInIntent(), RC_SIGN_IN);
-        } else {
-            Log.v(TAG, String.valueOf("Current User: " + currentUser));
-        }
+        //Authorize user:
+        startActivityForResult(mGoogleAuthClient.getSignInIntent(), RC_SIGN_IN);
     }
 
     @Override
