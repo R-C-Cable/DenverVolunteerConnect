@@ -3,7 +3,6 @@ package com.example.denvervolunteerconnect.clients;
 import android.util.Log;
 
 import androidx.annotation.AnyThread;
-import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -19,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 import utils.Constants;
 import utils.Utils;
@@ -110,19 +111,20 @@ public class FirebaseDatabaseClient {
         if (requestModel.isUniqueIdDefault()) {
             requestModel.setUniqueId(String.valueOf(Instant.now().toEpochMilli() + new Random().nextLong()));
         }
-        Log.v(TAG, requestModel.toString());
         executorService.submit(() -> {
-            Log.v(TAG, requestModel.toString());
-            requestEndPointReference
-                    .child(String.valueOf(requestModel.getUniqueId()))
-                    .setValue(requestModel)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
+            try {
+                requestEndPointReference
+                        .child(String.valueOf(requestModel.getUniqueId()))
+                        .setValue(requestModel)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 
-                        }
-                    });
-
+                            }
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -170,6 +172,31 @@ public class FirebaseDatabaseClient {
         });
     }
 
+    public void startVolunteerRequestListInitialUpdate(){
+        executorService.submit(() -> {
+            ArrayList<RequestModel> localRequestList = new ArrayList<>();
+            requestEndPointReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    dataSnapshot.getChildren().forEach(new Consumer<DataSnapshot>() {
+                        @Override
+                        public void accept(DataSnapshot request) {
+                            localRequestList.add(request.getValue(RequestModel.class));
+                        }
+                    });
+                    _requestList.postValue(localRequestList);
+                    startVolunteerRequestListObserver();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e(TAG,"The read failed: " + databaseError.getCode());
+                }
+            });
+
+        });
+    }
+
 
     public void startVolunteerRequestListObserver() {
         requestEndPointReference.addChildEventListener(new ChildEventListener() {
@@ -205,22 +232,19 @@ public class FirebaseDatabaseClient {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.v(TAG, "onChildChanged " + snapshot);
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                Log.v(TAG, "onChildRemoved " + snapshot);
             }
 
             @Override
             public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                Log.v(TAG, "onChildMoved " + snapshot);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.v(TAG, error.toString());
+                Log.e(TAG, error.toString());
             }
         });
     }

@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.denvervolunteerconnect.R;
 import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
-import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
 import com.example.denvervolunteerconnect.databinding.BrowsingBinding;
 import com.example.denvervolunteerconnect.models.RequestModel;
 import com.example.denvervolunteerconnect.models.UserDataModel;
@@ -126,7 +125,6 @@ public class BrowsingFragment extends Fragment {
         mMainActivityViewModel.getLiveRequestList().observe(requireActivity(), new Observer<ArrayList<RequestModel>>() {
             @Override
             public void onChanged(ArrayList<RequestModel> requestModels) {
-                Log.e("ROBERT Fragment", requestModels.toString());
                 requestRecyclerViewAdapter.updateList(requestModels);
             }
         });

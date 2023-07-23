@@ -8,13 +8,12 @@
     android:layout_height="70dp"
     android:layout_margin="@dimen/standard_margin">
 
-
     <TextView
         android:id="@+id/title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/standard_body_text_size"
-        android:layout_margin="@dimen/standard_margin"
+        android:layout_marginStart="@dimen/standard_margin"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/volunteer_star"
@@ -23,10 +22,9 @@
     <ImageView
         android:id="@+id/volunteer_star"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="25dp"
         android:visibility="gone"
         android:src="@drawable/ic_star"
-        android:layout_margin="@dimen/standard_margin"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

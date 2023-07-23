@@ -1,7 +1,5 @@
 package com.example.denvervolunteerconnect.recyclerview;
 
-
-
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,8 +12,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
-
-import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
 import com.example.denvervolunteerconnect.databinding.VolunteerRequestListItemBinding;
 import com.example.denvervolunteerconnect.models.RequestModel;
 
@@ -91,7 +87,6 @@ public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecy
                 public void onChanged(String currentLoggedInUser) {
                     if(currentLoggedInUser.equals(requestModel.getVolunteerId())) {
                         viewBinding.volunteerStar.setVisibility(View.VISIBLE);
-//                        viewBinding.getRoot().requestLayout();
                     }
                 }
             });

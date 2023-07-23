@@ -1,5 +1,7 @@
 package com.example.denvervolunteerconnect.models;
 
+import java.util.Objects;
+
 import utils.Constants;
 
 public class UserDataModel {
@@ -12,6 +14,7 @@ public class UserDataModel {
         this.userName = userName;
         this.profilePictureUrl = profilePictureUrl;
     }
+
     public UserDataModel() {
     }
 
@@ -46,5 +49,13 @@ public class UserDataModel {
                 ", userName='" + userName + '\'' +
                 ", profilePictureUrl='" + profilePictureUrl + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDataModel that = (UserDataModel) o;
+        return userId.equals(that.userId);
     }
 }

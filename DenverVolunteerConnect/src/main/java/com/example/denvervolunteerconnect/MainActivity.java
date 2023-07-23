@@ -8,10 +8,12 @@ import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
 import com.example.denvervolunteerconnect.clients.GoogleAuthClient;
 
 import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 
+import androidx.core.view.MenuProvider;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,7 +24,9 @@ import com.example.denvervolunteerconnect.databinding.ActivityMainBinding;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import utils.Constants;
 
@@ -60,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Authorize user:
         startActivityForResult(mGoogleAuthClient.getSignInIntent(), RC_SIGN_IN);
-        mFirebaseDatabaseClient.startVolunteerRequestListObserver();
+        mFirebaseDatabaseClient.startVolunteerRequestListInitialUpdate();
         mMainActivityViewModel.startUserDataObserver(this);
         mMainActivityViewModel.startRequestListObserver(this);
     }
@@ -109,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             Log.v(TAG, "Logged in Success, posting user data to Firebase.");
         } else {
             Log.w(TAG, "Closing application due to failure to login");
-            //TODO: add logic to notify the user of the failure, and allow them to retry.
+            Toast.makeText(this, "Log In is required to use Denver Volunteer Connect", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -123,13 +127,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.logout_action) {
+            mGoogleAuthClient.signOut();
+            Toast.makeText(this, "Successfully Logged out.", Toast.LENGTH_LONG).show();
+            finish();
             return true;
         }
 

@@ -36,7 +36,6 @@ public class GoogleAuthClient {
     private static ExecutorService authExecutorService = Executors.newSingleThreadExecutor();
     private static volatile FirebaseAuth mFirebaseAuth;
     private static volatile GoogleSignInClient mGoogleSignInClient;
-    private Future<?> authFuture = null;
     private Context context;
 
 
@@ -73,21 +72,19 @@ public class GoogleAuthClient {
         INSTANCE = null;
     }
 
-    public static void signOut() {
+    public void signOut() {
         try {
             authExecutorService.execute(() -> {
                 mGoogleSignInClient.signOut();
                 mFirebaseAuth.signOut();
-                // TODO: send the user to the home screen.
             });
-        } catch (Exception e) { //TODO: make catch more specific
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @NonNull
     public Intent getSignInIntent() {
-        Log.v(TAG, "signIn");
         return mGoogleSignInClient.getSignInIntent();
     }
 
@@ -128,7 +125,7 @@ public class GoogleAuthClient {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.v(TAG, "signInWithCredential:success");
                             FirebaseUser user = mFirebaseAuth.getCurrentUser();
                             postUserToDatabase(user);
                         } else {

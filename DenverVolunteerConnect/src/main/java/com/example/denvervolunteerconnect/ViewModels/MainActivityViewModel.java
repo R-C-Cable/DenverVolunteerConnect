@@ -61,14 +61,6 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
 
-    public boolean hasVolunteeredForRequest(RequestModel requestData) {
-        try {
-            return userData.getUserId().equals(requestData.getVolunteerId());
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public void startUserDataObserver(LifecycleOwner lifecycleOwner) {
         Log.v(TAG, "Start User Data Observer");
         LiveData<UserDataModel> firebaseDatabaseClientUserData
@@ -93,7 +85,6 @@ public class MainActivityViewModel extends ViewModel {
                 lifecycleOwner, new Observer<ArrayList<RequestModel>>() {
                     @Override
                     public void onChanged(ArrayList<RequestModel> requestModels) {
-                        Log.e("ROBERT viewModel", requestModels.toString());
                         _liveRequestList.postValue(requestModels);
                     }
                 });
