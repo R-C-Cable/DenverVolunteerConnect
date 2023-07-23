@@ -108,6 +108,18 @@ public class RequestManagementFragment extends Fragment {
                 editRequestFragmentBinding.editButton.setVisibility(View.INVISIBLE);
                 editRequestFragmentBinding.deleteButton.setVisibility(View.INVISIBLE);
                 editRequestFragmentBinding.requestActionButton.setText("Volunteer");
+                editRequestFragmentBinding.requestActionButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (fieldsNotBlank()) {
+                            // Logic to upload request
+                            Toast.makeText(getActivity(), "Thanks You For Volunteering!", Toast.LENGTH_SHORT).show();
+                            mMainActivityViewModel.addVolunteerToRequest();
+                            NavHostFragment.findNavController(RequestManagementFragment.this)
+                                    .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                        }
+                    }
+                });
 
             }
         }

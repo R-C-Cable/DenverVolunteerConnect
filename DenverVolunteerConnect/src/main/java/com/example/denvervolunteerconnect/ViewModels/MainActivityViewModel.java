@@ -84,6 +84,10 @@ public class MainActivityViewModel extends ViewModel {
 
     }
 
+    public void addVolunteerToRequest(){
+        FirebaseDatabaseClient.getInstance().postVolunteerToRequest(requestModel);
+    }
+
 
     public void uploadVolunteerRequest(String title, String location, String description, String requesterId) {
         FirebaseDatabaseClient.getInstance()

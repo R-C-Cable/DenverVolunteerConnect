@@ -134,25 +134,25 @@ public class FirebaseDatabaseClient {
                 newRequestData.put("description", requestModel.getDescription());
                 newRequestData.put("location", requestModel.getLocation());
                 newRequestData.put("title", requestModel.getTitle());
-                childReference.updateChildren(newRequestData).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Log.v("ROBERT", "updateVolunteerRequest onComplete");
-                    }
-                });
-
+                childReference.updateChildren(newRequestData);
             } catch (Exception e) {
                 Log.e(TAG, "Failed to update volunteer request: ");
                 e.printStackTrace();
             }
 
-        });
+        });;
     }
 
-    public void addVolunteerToRequest(RequestModel requestModel) {
+    public void postVolunteerToRequest(RequestModel requestModel) {
         executorService.submit(() -> {
             try {
-
+                DatabaseReference childReference = requestEndPointReference.child(requestModel.getUniqueId());
+                Map<String, Object> newRequestData = new HashMap<>();
+                UserDataModel userData = _liveUserData.getValue();
+                if (userData != null) {
+                    newRequestData.put("volunteerId", userData.getUserId());
+                    childReference.updateChildren(newRequestData);
+                }
             } catch (Exception e){
                 e.printStackTrace();
             }
