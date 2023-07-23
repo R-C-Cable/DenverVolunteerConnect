@@ -9,32 +9,29 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.example.denvervolunteerconnect.R;
 import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
 import com.example.denvervolunteerconnect.databinding.VolunteerRequestListItemBinding;
-import com.example.denvervolunteerconnect.fragments.BrowsingFragment;
 import com.example.denvervolunteerconnect.models.RequestModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecyclerViewAdapter.RequestItemViewHolder> {
     ArrayList<RequestModel> volunteerRequestList = new ArrayList<>();
-    private OnClickListener onClickListener;
-    MainActivityViewModel mMainActivityViewModel = null;
+    private RequestItemOnClickListener requestItemOnClickListener;
+    private MutableLiveData<String> liveUserId = new MutableLiveData<>();
     Context context = null;
 
-    public RequestRecyclerViewAdapter(Context context, MainActivityViewModel mainActivityViewModel) {
+    public RequestRecyclerViewAdapter(Context context) {
         this.context = context;
-        this.mMainActivityViewModel = mainActivityViewModel;
     }
 
-    public interface OnClickListener {
+    public interface RequestItemOnClickListener {
         void onClick(RequestModel requestModel);
     }
 
@@ -62,8 +59,12 @@ public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecy
         notifyDataSetChanged();
     }
 
-    public void setOnClickListener(OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+    public void setRequestItemOnClickListener(RequestItemOnClickListener requestItemOnClickListener) {
+        this.requestItemOnClickListener = requestItemOnClickListener;
+    }
+
+    public void notifyUserChange(String currentUserId) {
+        liveUserId.setValue(currentUserId);
     }
 
 
@@ -83,13 +84,25 @@ public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecy
         }
 
         public void onBind(RequestModel requestModel) {
+
+
+            liveUserId.observe((LifecycleOwner) viewBinding.getRoot().getContext(), new Observer<String>() {
+                @Override
+                public void onChanged(String currentLoggedInUser) {
+                    if(currentLoggedInUser.equals(requestModel.getVolunteerId())) {
+                        viewBinding.volunteerStar.setVisibility(View.VISIBLE);
+//                        viewBinding.getRoot().requestLayout();
+                    }
+                }
+            });
+
             viewBinding.titleText.setText(requestModel.getTitle());
             viewBinding.locationText.setText(requestModel.getLocation());
             viewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (onClickListener != null) {
-                        onClickListener.onClick(requestModel);
+                    if (requestItemOnClickListener != null) {
+                        requestItemOnClickListener.onClick(requestModel);
                     }
                 }
             });

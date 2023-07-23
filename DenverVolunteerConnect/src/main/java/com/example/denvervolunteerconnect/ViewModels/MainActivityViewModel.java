@@ -53,6 +53,22 @@ public class MainActivityViewModel extends ViewModel {
         }
     }
 
+    public boolean hasVolunteeredCurrentRequest() {
+        try {
+            return userData.getUserId().equals(requestModel.getVolunteerId());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean hasVolunteeredForRequest(RequestModel requestData) {
+        try {
+            return userData.getUserId().equals(requestData.getVolunteerId());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public void startUserDataObserver(LifecycleOwner lifecycleOwner) {
         Log.v(TAG, "Start User Data Observer");
         LiveData<UserDataModel> firebaseDatabaseClientUserData

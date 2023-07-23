@@ -18,13 +18,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.denvervolunteerconnect.R;
 import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
+import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
 import com.example.denvervolunteerconnect.databinding.BrowsingBinding;
 import com.example.denvervolunteerconnect.models.RequestModel;
 import com.example.denvervolunteerconnect.models.UserDataModel;
 import com.example.denvervolunteerconnect.recyclerview.RequestRecyclerViewAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @MainThread
 public class BrowsingFragment extends Fragment {
@@ -50,10 +50,10 @@ public class BrowsingFragment extends Fragment {
         mBrowsingFragmentBinding = BrowsingBinding.inflate(inflater, container, false);
         requestRecyclerView = mBrowsingFragmentBinding.volunteerRequestList;
         requestRecyclerView.setHasFixedSize(false);
-        requestRecyclerViewAdapter = new RequestRecyclerViewAdapter(getContext(), mMainActivityViewModel);
+        requestRecyclerViewAdapter = new RequestRecyclerViewAdapter(getContext());
         requestRecyclerView.setAdapter(requestRecyclerViewAdapter);
 
-        requestRecyclerViewAdapter.setOnClickListener(new RequestRecyclerViewAdapter.OnClickListener() {
+        requestRecyclerViewAdapter.setRequestItemOnClickListener(new RequestRecyclerViewAdapter.RequestItemOnClickListener() {
             @Override
             public void onClick(RequestModel requestModel) {
                 mMainActivityViewModel.setCurrentRequestModel(requestModel);
@@ -61,6 +61,7 @@ public class BrowsingFragment extends Fragment {
                         .navigate(R.id.start_create_request_flow);
             }
         });
+
         return mBrowsingFragmentBinding.getRoot();
     }
 
@@ -69,9 +70,7 @@ public class BrowsingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.v(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-        mMainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
-        this.startRequestListObserver();
-        this.startUserObserver();
+        setupViewModelAndObservers();
 
         mBrowsingFragmentBinding.createRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,22 +108,21 @@ public class BrowsingFragment extends Fragment {
         mBrowsingFragmentBinding = null;
     }
 
-    private void startUserObserver() {
+    private void setupViewModelAndObservers(){
+        mMainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         mMainActivityViewModel.getLiveUserData().observe(requireActivity(), new Observer<UserDataModel>() {
             @Override
             public void onChanged(UserDataModel userData) {
                 try {
                     TextView userNameText = mBrowsingFragmentBinding.userNameText;
                     userNameText.setText(userData.getUserName());
+                    requestRecyclerViewAdapter.notifyUserChange(userData.getUserId());
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to update UI with user name");
                     e.printStackTrace();
                 }
             }
         });
-    }
-
-    private void startRequestListObserver() {
         mMainActivityViewModel.getLiveRequestList().observe(requireActivity(), new Observer<ArrayList<RequestModel>>() {
             @Override
             public void onChanged(ArrayList<RequestModel> requestModels) {
@@ -132,5 +130,6 @@ public class BrowsingFragment extends Fragment {
                 requestRecyclerViewAdapter.updateList(requestModels);
             }
         });
+
     }
 }
