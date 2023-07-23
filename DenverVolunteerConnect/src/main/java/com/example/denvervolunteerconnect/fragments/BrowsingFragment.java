@@ -114,7 +114,8 @@ public class BrowsingFragment extends Fragment {
             public void onChanged(UserDataModel userData) {
                 try {
                     TextView userNameText = mBrowsingFragmentBinding.userNameText;
-                    userNameText.setText(userData.getUserName());
+                    String helloUser = getString(R.string.hello) + " " + userData.getUserName();
+                    userNameText.setText(helloUser);
                     requestRecyclerViewAdapter.notifyUserChange(userData.getUserId());
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to update UI with user name");

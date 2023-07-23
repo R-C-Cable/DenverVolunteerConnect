@@ -20,4 +20,5 @@
     <string name="edit">Edit</string>
     <string name="submit_request">Submit Request</string>
     <string name="delete">Delete</string>
+    <string name="hello">Hello </string>
 </resources>
