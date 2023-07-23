@@ -62,11 +62,7 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        //Authorize user:
-        startActivityForResult(mGoogleAuthClient.getSignInIntent(), RC_SIGN_IN);
-        mFirebaseDatabaseClient.startVolunteerRequestListInitialUpdate();
-        mMainActivityViewModel.startUserDataObserver(this);
-        mMainActivityViewModel.startRequestListObserver(this);
+        authorizeUser();
     }
 
     @Override
@@ -132,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.logout_action) {
             mGoogleAuthClient.signOut();
             Toast.makeText(this, "Successfully Logged out.", Toast.LENGTH_LONG).show();
-            finish();
+            authorizeUser();
             return true;
         }
 
@@ -144,5 +140,12 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    private void authorizeUser() {
+        startActivityForResult(mGoogleAuthClient.getSignInIntent(), RC_SIGN_IN);
+        mFirebaseDatabaseClient.startVolunteerRequestListInitialUpdate();
+        mMainActivityViewModel.startUserDataObserver(this);
+        mMainActivityViewModel.startRequestListObserver(this);
     }
 }
