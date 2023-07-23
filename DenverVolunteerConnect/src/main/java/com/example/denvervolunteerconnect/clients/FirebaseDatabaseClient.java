@@ -211,7 +211,7 @@ public class FirebaseDatabaseClient {
                             } else if (_requestList.getValue() == null || _requestList.getValue().isEmpty()) {
                                 final ArrayList<RequestModel> newRequestList = new ArrayList<>();
                                 newRequestList.add(requestModel);
-                                Log.v(TAG, "Initial setup of requestList: " + newRequestList);
+                                Log.v(TAG, "Initial update failed adding: " + newRequestList);
                                 _requestList.postValue(newRequestList);
                             } else if (!_requestList.getValue().contains(requestModel)) {
                                 final ArrayList<RequestModel> newRequestList = new ArrayList<>(_requestList.getValue());
