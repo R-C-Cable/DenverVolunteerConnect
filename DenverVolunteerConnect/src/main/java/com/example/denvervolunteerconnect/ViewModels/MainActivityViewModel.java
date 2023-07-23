@@ -1,5 +1,7 @@
 package com.example.denvervolunteerconnect.ViewModels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,29 +12,49 @@ import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
 import com.example.denvervolunteerconnect.models.RequestModel;
 import com.example.denvervolunteerconnect.models.UserDataModel;
 
-public class RequestManagementViewModel extends ViewModel {
-    private static final String TAG = RequestManagementViewModel.class.getSimpleName();
+import java.util.ArrayList;
+
+public class MainActivityViewModel extends ViewModel {
+    private static final String TAG = MainActivityViewModel.class.getSimpleName();
     private RequestModel requestModel = new RequestModel();
     private UserDataModel userData = new UserDataModel();
     private MutableLiveData<UserDataModel> _liveUserData = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<RequestModel>> _liveRequestList = new MutableLiveData<>();
 
     public UserDataModel getUserData() {
         return userData;
     }
 
-    public RequestModel getRequestModel() {
+    public RequestModel getCurrentRequestModel() {
         return requestModel;
     }
 
-    public void resetRequestModel() {
+    public void resetCurrentRequestModel() {
         this.requestModel = new RequestModel();
+    }
+
+    public void setCurrentRequestModel(RequestModel requestModel) {
+        this.requestModel = requestModel;
     }
 
     public LiveData<UserDataModel> getLiveUserData() {
         return _liveUserData;
     }
 
+    public LiveData<ArrayList<RequestModel>> getLiveRequestList() {
+        return _liveRequestList;
+    }
+
+    public boolean isOwnerOfRequest() {
+        try {
+            return userData.getUserId().equals(requestModel.getRequesterId());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public void startUserDataObserver(LifecycleOwner lifecycleOwner) {
+        Log.v(TAG, "Start User Data Observer");
         LiveData<UserDataModel> firebaseDatabaseClientUserData
                 = FirebaseDatabaseClient.getInstance().liveUserData();
         userData = firebaseDatabaseClientUserData.getValue();
@@ -45,6 +67,21 @@ public class RequestManagementViewModel extends ViewModel {
                         userData = userDataModel;
                     }
                 });
+    }
+
+    public void startRequestListObserver(LifecycleOwner lifecycleOwner) {
+        Log.v(TAG, "Starting Request List Observer");
+        LiveData<ArrayList<RequestModel>> firebaseDatabaseClientRequestList
+                = FirebaseDatabaseClient.getInstance().liveRequestList();
+        firebaseDatabaseClientRequestList.observe(
+                lifecycleOwner, new Observer<ArrayList<RequestModel>>() {
+                    @Override
+                    public void onChanged(ArrayList<RequestModel> requestModels) {
+                        Log.e("ROBERT viewModel", requestModels.toString());
+                        _liveRequestList.postValue(requestModels);
+                    }
+                });
+
     }
 
 

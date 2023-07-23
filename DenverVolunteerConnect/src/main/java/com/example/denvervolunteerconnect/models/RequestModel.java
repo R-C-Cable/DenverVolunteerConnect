@@ -18,8 +18,7 @@ public class RequestModel {
     private String volunteerId = Constants.Strings.RESULT_EMPTY;
 
 
-    public RequestModel() {
-    }
+    public RequestModel() {}
 
     public RequestModel(
             String title,
@@ -95,5 +94,14 @@ public class RequestModel {
                 ", RequesterId='" + requesterId + '\'' +
                 ", volunteerId='" + volunteerId + '\'' +
                 '}';
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RequestModel that = (RequestModel) o;
+        return uniqueId == that.uniqueId;
     }
 }

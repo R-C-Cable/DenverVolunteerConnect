@@ -17,12 +17,13 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.denvervolunteerconnect.R;
-import com.example.denvervolunteerconnect.ViewModels.BrowsingViewModel;
+import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
 import com.example.denvervolunteerconnect.databinding.BrowsingBinding;
 import com.example.denvervolunteerconnect.models.RequestModel;
 import com.example.denvervolunteerconnect.models.UserDataModel;
-import com.example.denvervolunteerconnect.recyclerview.VolunteerRequestRecyclerViewAdapter;
+import com.example.denvervolunteerconnect.recyclerview.RequestRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @MainThread
@@ -30,16 +31,17 @@ public class BrowsingFragment extends Fragment {
 
     private static final String TAG = BrowsingFragment.class.getSimpleName();
     private BrowsingBinding mBrowsingFragmentBinding = null;
-    private BrowsingViewModel mBrowsingViewModel = null;
+    private MainActivityViewModel mMainActivityViewModel = null;
     private RecyclerView requestRecyclerView = null;
-    private VolunteerRequestRecyclerViewAdapter requestRecyclerViewAdapter = null;
+    private RequestRecyclerViewAdapter requestRecyclerViewAdapter = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.v(TAG,"onCreate");
         super.onCreate(savedInstanceState);
-        mBrowsingViewModel = new ViewModelProvider(requireActivity()).get(BrowsingViewModel.class);
-        mBrowsingViewModel.startUserDataObserver(this);
+        mMainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
+        mMainActivityViewModel.startUserDataObserver(getActivity());
+        mMainActivityViewModel.startRequestListObserver(getActivity());
 
 
     }
@@ -53,9 +55,17 @@ public class BrowsingFragment extends Fragment {
         mBrowsingFragmentBinding = BrowsingBinding.inflate(inflater, container, false);
         requestRecyclerView = mBrowsingFragmentBinding.volunteerRequestList;
         requestRecyclerView.setHasFixedSize(false);
-        requestRecyclerViewAdapter = new VolunteerRequestRecyclerViewAdapter(getContext());
+        requestRecyclerViewAdapter = new RequestRecyclerViewAdapter(getContext(), mMainActivityViewModel);
         requestRecyclerView.setAdapter(requestRecyclerViewAdapter);
 
+        requestRecyclerViewAdapter.setOnClickListener(new RequestRecyclerViewAdapter.OnClickListener() {
+            @Override
+            public void onClick(RequestModel requestModel) {
+                mMainActivityViewModel.setCurrentRequestModel(requestModel);
+                NavHostFragment.findNavController(BrowsingFragment.this)
+                        .navigate(R.id.start_create_request_flow);
+            }
+        });
         return mBrowsingFragmentBinding.getRoot();
     }
 
@@ -65,10 +75,12 @@ public class BrowsingFragment extends Fragment {
         Log.v(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
         this.startUserObserver();
+        this.startRequestListObserver();
 
-        mBrowsingFragmentBinding.buttonFirst.setOnClickListener(new View.OnClickListener() {
+        mBrowsingFragmentBinding.createRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mMainActivityViewModel.resetCurrentRequestModel();
                 NavHostFragment.findNavController(BrowsingFragment.this)
                         .navigate(R.id.start_create_request_flow);
             }
@@ -79,7 +91,6 @@ public class BrowsingFragment extends Fragment {
     public void onStart() {
         Log.v(TAG, "onStart");
         super.onStart();
-        requestRecyclerViewAdapter.updateList(List.of(new RequestModel(), new RequestModel()));
     }
 
     @Override
@@ -98,12 +109,12 @@ public class BrowsingFragment extends Fragment {
     public void onDestroyView() {
         Log.v(TAG,"onDestroyView");
         super.onDestroyView();
-        mBrowsingViewModel = null;
+        mMainActivityViewModel = null;
         mBrowsingFragmentBinding = null;
     }
 
     private void startUserObserver() {
-        mBrowsingViewModel.getLiveUserData().observe(requireActivity(), new Observer<UserDataModel>() {
+        mMainActivityViewModel.getLiveUserData().observe(getViewLifecycleOwner(), new Observer<UserDataModel>() {
             @Override
             public void onChanged(UserDataModel userData) {
                 try {
@@ -116,5 +127,16 @@ public class BrowsingFragment extends Fragment {
             }
         });
     }
+
+    private void startRequestListObserver() {
+        mMainActivityViewModel.getLiveRequestList().observe(getViewLifecycleOwner(), new Observer<ArrayList<RequestModel>>() {
+            @Override
+            public void onChanged(ArrayList<RequestModel> requestModels) {
+                Log.e("ROBERT Fragment", requestModels.toString());
+                requestRecyclerViewAdapter.updateList(requestModels);
+            }
+        });
+    }
+
 
 }

@@ -3,8 +3,7 @@ package com.example.denvervolunteerconnect;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.denvervolunteerconnect.ViewModels.BrowsingViewModel;
-import com.example.denvervolunteerconnect.ViewModels.RequestManagementViewModel;
+import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
 import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
 import com.example.denvervolunteerconnect.clients.GoogleAuthClient;
 
@@ -21,7 +20,6 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.denvervolunteerconnect.databinding.ActivityMainBinding;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.FirebaseUser;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,8 +30,7 @@ import utils.Constants;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private BrowsingViewModel mBrowsingViewModel = null;
-    private RequestManagementViewModel mRequestManagementViewModel = null;
+    private MainActivityViewModel mMainActivityViewModel = null;
     private AppBarConfiguration appBarConfiguration = null;
     private ActivityMainBinding mMainActivityBinding = null;
     private FirebaseAnalytics mFirebaseAnalytics;
@@ -51,8 +48,7 @@ public class MainActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mGoogleAuthClient = GoogleAuthClient.getInstance(getApplicationContext());
         mFirebaseDatabaseClient = FirebaseDatabaseClient.getInstance();
-        mBrowsingViewModel = new ViewModelProvider(this).get(BrowsingViewModel.class);
-        mRequestManagementViewModel = new ViewModelProvider(this).get(RequestManagementViewModel.class);
+        mMainActivityViewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
 
         mMainActivityBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mMainActivityBinding.getRoot());
@@ -69,6 +65,13 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "onStart");
         //Authorize user:
         startActivityForResult(mGoogleAuthClient.getSignInIntent(), RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v(TAG, "onResume");
+        mFirebaseDatabaseClient.startVolunteerRequestListObserver();
     }
 
     @Override

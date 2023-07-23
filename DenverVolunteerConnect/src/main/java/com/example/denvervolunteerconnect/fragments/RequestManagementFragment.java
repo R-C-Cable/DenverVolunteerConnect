@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.denvervolunteerconnect.R;
-import com.example.denvervolunteerconnect.ViewModels.RequestManagementViewModel;
+import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
 import com.example.denvervolunteerconnect.databinding.RequestManagementBinding;
 import com.example.denvervolunteerconnect.models.RequestModel;
 
@@ -24,7 +24,7 @@ import utils.Constants;
 public class RequestManagementFragment extends Fragment {
 
     private static final String TAG = RequestManagementFragment.class.getSimpleName();
-    private RequestManagementViewModel mRequestManagementViewModel = null;
+    private MainActivityViewModel mMainActivityViewModel = null;
     private RequestManagementBinding editRequestFragmentBinding = null;
 
     @Override
@@ -40,8 +40,9 @@ public class RequestManagementFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.v(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-        mRequestManagementViewModel = new ViewModelProvider(requireActivity()).get(RequestManagementViewModel.class);
-        mRequestManagementViewModel.startUserDataObserver(this);
+        mMainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
+        mMainActivityViewModel.startUserDataObserver(this);
+        setupBasedOnUserFlows();
     }
 
     @Override
@@ -54,7 +55,6 @@ public class RequestManagementFragment extends Fragment {
     public void onResume() {
         Log.v(TAG, "onResume");
         super.onResume();
-        setupButtonsBasedOnUserFlows();
     }
 
     @Override
@@ -67,26 +67,26 @@ public class RequestManagementFragment extends Fragment {
     public void onDestroyView() {
         Log.v(TAG, "onDestroyView");
         super.onDestroyView();
-        mRequestManagementViewModel.resetRequestModel();
+        mMainActivityViewModel.resetCurrentRequestModel();
         editRequestFragmentBinding = null;
     }
 
-    private void setupButtonsBasedOnUserFlows() {
-        RequestModel requestModel = mRequestManagementViewModel.getRequestModel();
-        String userId = mRequestManagementViewModel.getUserData().getUserId();
+    private void setupBasedOnUserFlows() {
+        RequestModel requestModel = mMainActivityViewModel.getCurrentRequestModel();
+        String userId = mMainActivityViewModel.getUserData().getUserId();
         // Default Value equals creating a requestModel flow
         if (requestModel.requesterIdIsDefault()) {
-            Log.v(TAG, "Starting Request Creation Flow");
+            Log.i(TAG, "Starting Request Creation Flow");
             editRequestFragmentBinding.requestActionButton.setText(R.string.accept_button_text);
             editRequestFragmentBinding.requestActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (fieldsNotBlank()) {
-                        mRequestManagementViewModel.uploadVolunteerRequest(
+                        mMainActivityViewModel.uploadVolunteerRequest(
                                 editRequestFragmentBinding.titleEditText.getText().toString(),
                                 editRequestFragmentBinding.locationEditText.getText().toString(),
                                 editRequestFragmentBinding.descriptionEditText.getText().toString(),
-                                mRequestManagementViewModel.getUserData().getUserId()
+                                mMainActivityViewModel.getUserData().getUserId()
                         );
                         NavHostFragment.findNavController(RequestManagementFragment.this)
                                 .navigate(R.id.action_SecondFragment_to_FirstFragment);
@@ -94,25 +94,35 @@ public class RequestManagementFragment extends Fragment {
                     }
                 }
             });
-            // Owner of requestModel
-        } else if (
-                userId.equals(requestModel.getRequesterId())
-                && !mRequestManagementViewModel
-                .getRequestModel()
-                .getRequesterId()
-                .equals(Constants.Strings.RESULT_EMPTY)
-        ) {
-            Log.v(TAG, "Staring Owner Request Review flow with requestModel: "
-                    + mRequestManagementViewModel.getRequestModel().toString());
-            setupForOwner();
-            // Not Owner of requestModel
-        } else {
-            Log.v(TAG, "Staring non-owner requestModel view flow");
-            editRequestFragmentBinding.editButton.setVisibility(View.INVISIBLE);
-            editRequestFragmentBinding.deleteButton.setVisibility(View.INVISIBLE);
-            editRequestFragmentBinding.requestActionButton.setText("Accept");
+            // Not Default Values equals Viewing flow.
+        } else if (!requestModel.getTitle().equals(Constants.Strings.RESULT_EMPTY)
+                && !requestModel.getDescription().equals(Constants.Strings.RESULT_EMPTY)
+                && !requestModel.getLocation().equals(Constants.Strings.RESULT_EMPTY)) {
 
+            setupReviewMode(requestModel);
+
+            if (mMainActivityViewModel.isOwnerOfRequest()) {
+                Log.i(TAG, "Staring Owner Request Review flow with requestModel: "
+                        + mMainActivityViewModel.getCurrentRequestModel().toString());
+                setupForOwner();
+                // Not Owner of requestModel
+            } else {
+                Log.i(TAG, "Staring non-owner review flow");
+                editRequestFragmentBinding.editButton.setVisibility(View.INVISIBLE);
+                editRequestFragmentBinding.deleteButton.setVisibility(View.INVISIBLE);
+                editRequestFragmentBinding.requestActionButton.setText("Volunteer");
+
+            }
         }
+    }
+
+    private void setupReviewMode(RequestModel requestModel) {
+        editRequestFragmentBinding.titleEditText.setText(requestModel.getTitle());
+        editRequestFragmentBinding.titleEditText.setEnabled(false);
+        editRequestFragmentBinding.locationEditText.setText(requestModel.getLocation());
+        editRequestFragmentBinding.locationEditText.setEnabled(false);
+        editRequestFragmentBinding.descriptionEditText.setText(requestModel.getDescription());
+        editRequestFragmentBinding.descriptionEditText.setEnabled(false);
     }
 
     private void setupForOwner() {
@@ -171,5 +181,4 @@ public class RequestManagementFragment extends Fragment {
         }
         return result;
     }
-
 }

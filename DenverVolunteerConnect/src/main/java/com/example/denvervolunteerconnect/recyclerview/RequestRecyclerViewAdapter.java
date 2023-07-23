@@ -1,28 +1,42 @@
 package com.example.denvervolunteerconnect.recyclerview;
 
 
-import android.annotation.SuppressLint;
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewbinding.ViewBinding;
 
+
+import com.example.denvervolunteerconnect.R;
+import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
 import com.example.denvervolunteerconnect.databinding.VolunteerRequestListItemBinding;
+import com.example.denvervolunteerconnect.fragments.BrowsingFragment;
 import com.example.denvervolunteerconnect.models.RequestModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class VolunteerRequestRecyclerViewAdapter extends RecyclerView.Adapter<VolunteerRequestRecyclerViewAdapter.RequestItemViewHolder> {
-    List<RequestModel> volunteerRequestList = List.of();
+public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecyclerViewAdapter.RequestItemViewHolder> {
+    ArrayList<RequestModel> volunteerRequestList = new ArrayList<>();
+    private OnClickListener onClickListener;
+    MainActivityViewModel mMainActivityViewModel = null;
     Context context = null;
 
-    public VolunteerRequestRecyclerViewAdapter(Context context) {
+    public RequestRecyclerViewAdapter(Context context, MainActivityViewModel mainActivityViewModel) {
         this.context = context;
-        Log.v("ROBERT", "VolunteerRequestRecyclerViewAdapter");
+        this.mMainActivityViewModel = mainActivityViewModel;
+        Log.v("ROBERT", "RequestRecyclerViewAdapter");
+    }
+
+    public interface OnClickListener {
+        void onClick(RequestModel requestModel);
     }
 
     @NonNull
@@ -46,14 +60,27 @@ public class VolunteerRequestRecyclerViewAdapter extends RecyclerView.Adapter<Vo
         return volunteerRequestList.size();
     }
 
-    public void updateList(List<RequestModel> volunteerRequestList) {
+    public void updateList(ArrayList<RequestModel> volunteerRequestList) {
         this.volunteerRequestList = volunteerRequestList;
+        Log.e("ROBERT","adapter " + volunteerRequestList);
         notifyDataSetChanged();
+    }
+
+    public void setOnClickListener(OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
+
+    @Override
+    public void onViewRecycled(@NonNull RequestItemViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.unBind();
     }
 
     public class RequestItemViewHolder extends RecyclerView.ViewHolder {
         private final String TAG = RequestItemViewHolder.class.getSimpleName();
         private VolunteerRequestListItemBinding viewBinding;
+
         public RequestItemViewHolder(@NonNull VolunteerRequestListItemBinding volunteerRequestListItemBinding) {
             super(volunteerRequestListItemBinding.getRoot());
             viewBinding = volunteerRequestListItemBinding;
@@ -64,6 +91,18 @@ public class VolunteerRequestRecyclerViewAdapter extends RecyclerView.Adapter<Vo
             Log.v("ROBERT", requestModel.toString());
             viewBinding.titleText.setText(requestModel.getTitle());
             viewBinding.locationText.setText(requestModel.getLocation());
+            viewBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onClickListener != null) {
+                        onClickListener.onClick(requestModel);
+                    }
+                }
+            });
+        }
+
+        public void unBind(){
+            Log.v(TAG, "RequestItemViewHolder unBind");
         }
     }
 }
