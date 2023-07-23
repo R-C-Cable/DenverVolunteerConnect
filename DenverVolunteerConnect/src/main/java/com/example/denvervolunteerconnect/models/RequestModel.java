@@ -1,9 +1,5 @@
 package com.example.denvervolunteerconnect.models;
 
-import androidx.annotation.NonNull;
-
-import java.util.Objects;
-
 import utils.Constants;
 
 /**
@@ -34,6 +30,10 @@ public class RequestModel {
 
     public long getUniqueId() {
         return uniqueId;
+    }
+
+    public boolean isUniqueIdDefault() {
+        return (uniqueId == Constants.Integers.RESULT_EMPTY);
     }
 
     public void setUniqueId(long uniqueId) {
@@ -68,7 +68,7 @@ public class RequestModel {
         return requesterId;
     }
 
-    public boolean requesterIdIsDefault() {
+    public boolean isRequesterIdDefault() {
         return requesterId.equals(Constants.Strings.RESULT_EMPTY);
     }
 
@@ -85,23 +85,22 @@ public class RequestModel {
     }
 
     @Override
-    public String toString() {
-        return "RequestModel{" +
-                "requestId='" + uniqueId + '\'' +
-                ", title='" + title + '\'' +
-                ", location='" + location + '\'' +
-                ", description='" + description + '\'' +
-                ", RequesterId='" + requesterId + '\'' +
-                ", volunteerId='" + volunteerId + '\'' +
-                '}';
-    }
-
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RequestModel that = (RequestModel) o;
         return uniqueId == that.uniqueId;
+    }
+
+    @Override
+    public String toString() {
+        return "RequestModel{" +
+                "uniqueId=" + uniqueId +
+                ", title='" + title + '\'' +
+                ", location='" + location + '\'' +
+                ", description='" + description + '\'' +
+                ", requesterId='" + requesterId + '\'' +
+                ", volunteerId='" + volunteerId + '\'' +
+                '}';
     }
 }

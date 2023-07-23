@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.example.denvervolunteerconnect.fragments.BrowsingFragment"
-        android:label="@string/first_fragment_label"
+        android:label="@string/main_fragment_label"
         tools:layout="@layout/browsing">
 
         <action
@@ -18,7 +18,7 @@
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.denvervolunteerconnect.fragments.RequestManagementFragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/request_management_fragment_label"
         tools:layout="@layout/request_management">
 
         <action

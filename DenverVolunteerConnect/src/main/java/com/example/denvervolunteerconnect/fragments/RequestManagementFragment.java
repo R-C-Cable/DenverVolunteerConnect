@@ -18,8 +18,6 @@ import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
 import com.example.denvervolunteerconnect.databinding.RequestManagementBinding;
 import com.example.denvervolunteerconnect.models.RequestModel;
 
-import utils.Constants;
-
 @MainThread
 public class RequestManagementFragment extends Fragment {
 
@@ -74,8 +72,8 @@ public class RequestManagementFragment extends Fragment {
     private void setupBasedOnUserFlows() {
         RequestModel requestModel = mMainActivityViewModel.getCurrentRequestModel();
         String userId = mMainActivityViewModel.getUserData().getUserId();
-        // Default Value equals creating a requestModel flow
-        if (requestModel.requesterIdIsDefault()) {
+        // Default Value equals create request flow.
+        if (requestModel.isUniqueIdDefault()) {
             Log.i(TAG, "Starting Request Creation Flow");
             editRequestFragmentBinding.requestActionButton.setText(R.string.accept_button_text);
             editRequestFragmentBinding.requestActionButton.setOnClickListener(new View.OnClickListener() {
@@ -94,18 +92,11 @@ public class RequestManagementFragment extends Fragment {
                     }
                 }
             });
-            // Not Default Values equals Viewing flow.
-        } else if (!requestModel.getTitle().equals(Constants.Strings.RESULT_EMPTY)
-                && !requestModel.getDescription().equals(Constants.Strings.RESULT_EMPTY)
-                && !requestModel.getLocation().equals(Constants.Strings.RESULT_EMPTY)) {
-
+            // Not Default Values equals reviewing flow.
+        } else {
             setupReviewMode(requestModel);
-
             if (mMainActivityViewModel.isOwnerOfRequest()) {
-                Log.i(TAG, "Staring Owner Request Review flow with requestModel: "
-                        + mMainActivityViewModel.getCurrentRequestModel().toString());
-                setupForOwner();
-                // Not Owner of requestModel
+                setupReviewModeForOwner();
             } else {
                 Log.i(TAG, "Staring non-owner review flow");
                 editRequestFragmentBinding.editButton.setVisibility(View.INVISIBLE);
@@ -118,16 +109,17 @@ public class RequestManagementFragment extends Fragment {
 
     private void setupReviewMode(RequestModel requestModel) {
         editRequestFragmentBinding.titleEditText.setText(requestModel.getTitle());
-        editRequestFragmentBinding.titleEditText.setEnabled(false);
         editRequestFragmentBinding.locationEditText.setText(requestModel.getLocation());
-        editRequestFragmentBinding.locationEditText.setEnabled(false);
         editRequestFragmentBinding.descriptionEditText.setText(requestModel.getDescription());
-        editRequestFragmentBinding.descriptionEditText.setEnabled(false);
+        textFieldsEditable(false);
     }
 
-    private void setupForOwner() {
+    private void setupReviewModeForOwner() {
         editRequestFragmentBinding.editButton.setVisibility(View.VISIBLE);
         editRequestFragmentBinding.deleteButton.setVisibility(View.VISIBLE);
+        editRequestFragmentBinding.requestActionButton.setEnabled(false);
+        editRequestFragmentBinding.deleteButton.setEnabled(false);
+        editRequestFragmentBinding.requestActionButton.setText("Update Request");
 
         editRequestFragmentBinding.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,8 +145,9 @@ public class RequestManagementFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (fieldsNotBlank()) {
-                    // Logic to update request
-                    Toast.makeText(getActivity(), "editing request", Toast.LENGTH_SHORT).show();
+                    editRequestFragmentBinding.requestActionButton.setEnabled(true);
+                    editRequestFragmentBinding.deleteButton.setEnabled(true);
+                    textFieldsEditable(true);
                 }
             }
         });
@@ -180,5 +173,11 @@ public class RequestManagementFragment extends Fragment {
             result = false;
         }
         return result;
+    }
+
+    private void textFieldsEditable(boolean editable) {
+        editRequestFragmentBinding.titleEditText.setEnabled(editable);
+        editRequestFragmentBinding.locationEditText.setEnabled(editable);
+        editRequestFragmentBinding.descriptionEditText.setEnabled(editable);
     }
 }

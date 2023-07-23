@@ -89,4 +89,12 @@ public class MainActivityViewModel extends ViewModel {
         FirebaseDatabaseClient.getInstance()
                 .postVolunteerRequest(new RequestModel(title, location, description, requesterId));
     }
+
+    public void updateVolunteerRequest(RequestModel requestModel) {
+
+    }
+
+    public void deleteVolunteerRequest(RequestModel requestModel) {
+
+    }
 }

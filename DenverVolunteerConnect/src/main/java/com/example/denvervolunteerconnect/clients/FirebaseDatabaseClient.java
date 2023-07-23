@@ -21,12 +21,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 import utils.Constants;
 import utils.Utils;
@@ -107,7 +104,9 @@ public class FirebaseDatabaseClient {
     }
 
     public void postVolunteerRequest(RequestModel requestModel) {
-        requestModel.setUniqueId(Instant.now().toEpochMilli() + new Random().nextLong());
+        if (requestModel.isUniqueIdDefault()) {
+            requestModel.setUniqueId(Instant.now().toEpochMilli() + new Random().nextLong());
+        }
         Log.v(TAG, requestModel.toString());
         executorService.submit(() -> {
             Log.v(TAG, requestModel.toString());
@@ -127,23 +126,21 @@ public class FirebaseDatabaseClient {
 
     public void startVolunteerRequestListObserver() {
         requestEndPointReference.addChildEventListener(new ChildEventListener() {
-            final ArrayList<RequestModel> newRequestList = new ArrayList<>();
-
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                executorService.submit(() -> {
+                executorService.execute(() -> {
                     synchronized (FirebaseDatabaseClient.class) {
                         try {
                             RequestModel requestModel = snapshot.getValue(RequestModel.class);
                             if (requestModel == null) {
                                 Log.e(TAG, "attempting to add null RequestModel");
                             } else if (_requestList.getValue() == null || _requestList.getValue().isEmpty()) {
+                                final ArrayList<RequestModel> newRequestList = new ArrayList<>();
                                 newRequestList.add(requestModel);
                                 Log.v(TAG, "Initial setup of requestList: " + newRequestList);
                                 _requestList.postValue(newRequestList);
                             } else if (!_requestList.getValue().contains(requestModel)) {
-                                newRequestList.clear();
-                                newRequestList.addAll(_requestList.getValue());
+                                final ArrayList<RequestModel> newRequestList = new ArrayList<>(_requestList.getValue());
                                 newRequestList.add(requestModel);
                                 Log.v(TAG, "adding request to list: " + newRequestList);
                                 _requestList.postValue(newRequestList);
