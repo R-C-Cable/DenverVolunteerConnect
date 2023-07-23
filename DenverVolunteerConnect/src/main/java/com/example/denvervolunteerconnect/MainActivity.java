@@ -57,21 +57,24 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+        //Authorize user:
+        startActivityForResult(mGoogleAuthClient.getSignInIntent(), RC_SIGN_IN);
+        mFirebaseDatabaseClient.startVolunteerRequestListObserver();
+        mMainActivityViewModel.startUserDataObserver(this);
+        mMainActivityViewModel.startRequestListObserver(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         Log.v(TAG, "onStart");
-        //Authorize user:
-        startActivityForResult(mGoogleAuthClient.getSignInIntent(), RC_SIGN_IN);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume");
-        mFirebaseDatabaseClient.startVolunteerRequestListObserver();
     }
 
     @Override

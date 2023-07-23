@@ -3,6 +3,7 @@ package com.example.denvervolunteerconnect.clients;
 import android.util.Log;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -21,6 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -105,7 +108,7 @@ public class FirebaseDatabaseClient {
 
     public void postVolunteerRequest(RequestModel requestModel) {
         if (requestModel.isUniqueIdDefault()) {
-            requestModel.setUniqueId(Instant.now().toEpochMilli() + new Random().nextLong());
+            requestModel.setUniqueId(String.valueOf(Instant.now().toEpochMilli() + new Random().nextLong()));
         }
         Log.v(TAG, requestModel.toString());
         executorService.submit(() -> {
@@ -120,6 +123,59 @@ public class FirebaseDatabaseClient {
                         }
                     });
 
+        });
+    }
+
+
+//
+//    DatabaseReference hopperRef = usersRef.child("gracehop");
+//    Map<String, Object> hopperUpdates = new HashMap<>();
+//hopperUpdates.put("nickname", "Amazing Grace");
+//
+//hopperRef.updateChildrenAsync(hopperUpdates);
+
+
+    public void updateVolunteerRequest(RequestModel requestModel) {
+        executorService.submit(() -> {
+            try {
+                DatabaseReference childReference = requestEndPointReference.child(requestModel.getUniqueId());
+                Map<String, Object> newRequestData = new HashMap<>();
+                newRequestData.put("description", requestModel.getDescription());
+                newRequestData.put("location", requestModel.getLocation());
+                newRequestData.put("title", requestModel.getTitle());
+                childReference.updateChildren(newRequestData).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.v("ROBERT", "updateVolunteerRequest onComplete");
+                    }
+                });
+
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to update volunteer request: ");
+                e.printStackTrace();
+            }
+
+        });
+    }
+
+    public void addVolunteerToRequest(RequestModel requestModel) {
+        executorService.submit(() -> {
+            try {
+
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void deleteVolunteerRequest(RequestModel requestModel) {
+        executorService.submit(() -> {
+            try {
+                DatabaseReference childReference = requestEndPointReference.child(requestModel.getUniqueId());
+                childReference.setValue(null);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         });
     }
 

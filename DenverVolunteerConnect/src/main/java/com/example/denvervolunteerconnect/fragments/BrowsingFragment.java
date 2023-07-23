@@ -39,11 +39,6 @@ public class BrowsingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         Log.v(TAG,"onCreate");
         super.onCreate(savedInstanceState);
-        mMainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
-        mMainActivityViewModel.startUserDataObserver(getActivity());
-        mMainActivityViewModel.startRequestListObserver(getActivity());
-
-
     }
 
     @Override
@@ -74,8 +69,9 @@ public class BrowsingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.v(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-        this.startUserObserver();
+        mMainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         this.startRequestListObserver();
+        this.startUserObserver();
 
         mBrowsingFragmentBinding.createRequestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +110,7 @@ public class BrowsingFragment extends Fragment {
     }
 
     private void startUserObserver() {
-        mMainActivityViewModel.getLiveUserData().observe(getViewLifecycleOwner(), new Observer<UserDataModel>() {
+        mMainActivityViewModel.getLiveUserData().observe(requireActivity(), new Observer<UserDataModel>() {
             @Override
             public void onChanged(UserDataModel userData) {
                 try {
@@ -129,7 +125,7 @@ public class BrowsingFragment extends Fragment {
     }
 
     private void startRequestListObserver() {
-        mMainActivityViewModel.getLiveRequestList().observe(getViewLifecycleOwner(), new Observer<ArrayList<RequestModel>>() {
+        mMainActivityViewModel.getLiveRequestList().observe(requireActivity(), new Observer<ArrayList<RequestModel>>() {
             @Override
             public void onChanged(ArrayList<RequestModel> requestModels) {
                 Log.e("ROBERT Fragment", requestModels.toString());
@@ -137,6 +133,4 @@ public class BrowsingFragment extends Fragment {
             }
         });
     }
-
-
 }

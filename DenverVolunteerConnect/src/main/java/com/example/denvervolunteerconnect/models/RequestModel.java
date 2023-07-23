@@ -6,7 +6,7 @@ import utils.Constants;
  * RequestModel model
  */
 public class RequestModel {
-    private long uniqueId = Constants.Integers.RESULT_EMPTY;
+    private String uniqueId = Constants.Strings.RESULT_EMPTY;
     private String title = Constants.Strings.RESULT_EMPTY;
     private String location = Constants.Strings.RESULT_EMPTY;
     private String description = Constants.Strings.RESULT_EMPTY;
@@ -28,15 +28,15 @@ public class RequestModel {
         this.requesterId = requesterId;
     }
 
-    public long getUniqueId() {
+    public String getUniqueId() {
         return uniqueId;
     }
 
     public boolean isUniqueIdDefault() {
-        return (uniqueId == Constants.Integers.RESULT_EMPTY);
+        return (uniqueId.equals(Constants.Strings.RESULT_EMPTY));
     }
 
-    public void setUniqueId(long uniqueId) {
+    public void setUniqueId(String uniqueId) {
         this.uniqueId = uniqueId;
     }
 

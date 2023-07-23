@@ -90,11 +90,15 @@ public class MainActivityViewModel extends ViewModel {
                 .postVolunteerRequest(new RequestModel(title, location, description, requesterId));
     }
 
-    public void updateVolunteerRequest(RequestModel requestModel) {
+    public void updateVolunteerRequest(String title, String location, String description) {
+        requestModel.setTitle(title);
+        requestModel.setLocation(location);
+        requestModel.setDescription(description);
+        FirebaseDatabaseClient.getInstance().updateVolunteerRequest(requestModel);
 
     }
 
     public void deleteVolunteerRequest(RequestModel requestModel) {
-
+        FirebaseDatabaseClient.getInstance().deleteVolunteerRequest(requestModel);
     }
 }

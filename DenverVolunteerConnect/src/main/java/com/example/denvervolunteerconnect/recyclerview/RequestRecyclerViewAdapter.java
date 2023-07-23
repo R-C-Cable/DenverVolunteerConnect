@@ -32,7 +32,6 @@ public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecy
     public RequestRecyclerViewAdapter(Context context, MainActivityViewModel mainActivityViewModel) {
         this.context = context;
         this.mMainActivityViewModel = mainActivityViewModel;
-        Log.v("ROBERT", "RequestRecyclerViewAdapter");
     }
 
     public interface OnClickListener {
@@ -42,7 +41,6 @@ public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecy
     @NonNull
     @Override
     public RequestItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.v("ROBERT", "onCreateViewHolder");
         VolunteerRequestListItemBinding viewBinding = VolunteerRequestListItemBinding
                 .inflate(LayoutInflater.from(
                         parent.getContext()), parent, false);
@@ -52,7 +50,6 @@ public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecy
     @Override
     public void onBindViewHolder(@NonNull RequestItemViewHolder holder, int position) {
         holder.onBind(volunteerRequestList.get(position));
-        Log.v("ROBERT", "onBindViewHolder");
     }
 
     @Override
@@ -62,7 +59,6 @@ public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecy
 
     public void updateList(ArrayList<RequestModel> volunteerRequestList) {
         this.volunteerRequestList = volunteerRequestList;
-        Log.e("ROBERT","adapter " + volunteerRequestList);
         notifyDataSetChanged();
     }
 
@@ -84,11 +80,9 @@ public class RequestRecyclerViewAdapter extends RecyclerView.Adapter<RequestRecy
         public RequestItemViewHolder(@NonNull VolunteerRequestListItemBinding volunteerRequestListItemBinding) {
             super(volunteerRequestListItemBinding.getRoot());
             viewBinding = volunteerRequestListItemBinding;
-            Log.v("ROBERT", "RequestItemViewHolder");
         }
 
         public void onBind(RequestModel requestModel) {
-            Log.v("ROBERT", requestModel.toString());
             viewBinding.titleText.setText(requestModel.getTitle());
             viewBinding.locationText.setText(requestModel.getLocation());
             viewBinding.getRoot().setOnClickListener(new View.OnClickListener() {

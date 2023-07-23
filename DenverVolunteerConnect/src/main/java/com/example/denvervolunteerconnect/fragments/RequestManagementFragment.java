@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
@@ -25,6 +26,13 @@ public class RequestManagementFragment extends Fragment {
     private MainActivityViewModel mMainActivityViewModel = null;
     private RequestManagementBinding editRequestFragmentBinding = null;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mMainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
+    }
+
     @Override
     public View onCreateView(
             @NonNull LayoutInflater inflater, ViewGroup container,
@@ -38,8 +46,6 @@ public class RequestManagementFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         Log.v(TAG, "onViewCreated");
         super.onViewCreated(view, savedInstanceState);
-        mMainActivityViewModel = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
-        mMainActivityViewModel.startUserDataObserver(this);
         setupBasedOnUserFlows();
     }
 
@@ -126,7 +132,8 @@ public class RequestManagementFragment extends Fragment {
             public void onClick(View view) {
                 if (fieldsNotBlank()) {
                     // Logic to delete request
-                    Toast.makeText(getActivity(), "Deleting Request Request", Toast.LENGTH_SHORT).show();
+                    mMainActivityViewModel.deleteVolunteerRequest(mMainActivityViewModel.getCurrentRequestModel());
+                    Toast.makeText(getActivity(), "Deleting Volunteer Request", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -135,9 +142,13 @@ public class RequestManagementFragment extends Fragment {
             public void onClick(View view) {
                 if (fieldsNotBlank()) {
                     // Logic to upload request
+                    Toast.makeText(getActivity(), "Updating Volunteer Request", Toast.LENGTH_SHORT).show();
+                    mMainActivityViewModel.updateVolunteerRequest(
+                            editRequestFragmentBinding.titleEditText.getText().toString(),
+                            editRequestFragmentBinding.locationEditText.getText().toString(),
+                            editRequestFragmentBinding.descriptionEditText.getText().toString());
                     NavHostFragment.findNavController(RequestManagementFragment.this)
                             .navigate(R.id.action_SecondFragment_to_FirstFragment);
-                    Toast.makeText(getActivity(), "action button success", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -147,6 +158,7 @@ public class RequestManagementFragment extends Fragment {
                 if (fieldsNotBlank()) {
                     editRequestFragmentBinding.requestActionButton.setEnabled(true);
                     editRequestFragmentBinding.deleteButton.setEnabled(true);
+                    editRequestFragmentBinding.editButton.setEnabled(false);
                     textFieldsEditable(true);
                 }
             }
