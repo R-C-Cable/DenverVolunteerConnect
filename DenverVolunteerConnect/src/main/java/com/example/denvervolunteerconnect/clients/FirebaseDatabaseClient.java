@@ -126,15 +126,6 @@ public class FirebaseDatabaseClient {
         });
     }
 
-
-//
-//    DatabaseReference hopperRef = usersRef.child("gracehop");
-//    Map<String, Object> hopperUpdates = new HashMap<>();
-//hopperUpdates.put("nickname", "Amazing Grace");
-//
-//hopperRef.updateChildrenAsync(hopperUpdates);
-
-
     public void updateVolunteerRequest(RequestModel requestModel) {
         executorService.submit(() -> {
             try {
