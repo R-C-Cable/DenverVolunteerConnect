@@ -14,7 +14,7 @@ import com.example.denvervolunteerconnect.Models.UserDataModel;
 
 import java.util.ArrayList;
 
-public class MainActivityViewModel extends ViewModel {
+public class MainActivityViewModel extends BaseViewModel {
     private static final String TAG = MainActivityViewModel.class.getSimpleName();
     private RequestModel requestModel = new RequestModel();
     private UserDataModel userData = new UserDataModel();
