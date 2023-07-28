@@ -1,4 +1,4 @@
-package com.example.denvervolunteerconnect.clients;
+package com.example.denvervolunteerconnect.Clients;
 
 import android.util.Log;
 
@@ -8,8 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.denvervolunteerconnect.models.RequestModel;
-import com.example.denvervolunteerconnect.models.UserDataModel;
+import com.example.denvervolunteerconnect.Models.RequestModel;
+import com.example.denvervolunteerconnect.Models.UserDataModel;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;

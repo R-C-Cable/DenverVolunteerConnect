@@ -1,4 +1,4 @@
-package com.example.denvervolunteerconnect.fragments;
+package com.example.denvervolunteerconnect.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -19,9 +19,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.denvervolunteerconnect.R;
 import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
 import com.example.denvervolunteerconnect.databinding.BrowsingBinding;
-import com.example.denvervolunteerconnect.models.RequestModel;
-import com.example.denvervolunteerconnect.models.UserDataModel;
-import com.example.denvervolunteerconnect.recyclerview.RequestRecyclerViewAdapter;
+import com.example.denvervolunteerconnect.Models.RequestModel;
+import com.example.denvervolunteerconnect.Models.UserDataModel;
+import com.example.denvervolunteerconnect.RecyclerViews.RequestRecyclerViewAdapter;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.example.denvervolunteerconnect.clients;
+package com.example.denvervolunteerconnect.Clients;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +24,6 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import utils.Constants;
 

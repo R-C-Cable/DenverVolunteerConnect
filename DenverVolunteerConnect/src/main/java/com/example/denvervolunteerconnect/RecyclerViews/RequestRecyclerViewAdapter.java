@@ -1,4 +1,4 @@
-package com.example.denvervolunteerconnect.recyclerview;
+package com.example.denvervolunteerconnect.RecyclerViews;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,7 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.denvervolunteerconnect.databinding.VolunteerRequestListItemBinding;
-import com.example.denvervolunteerconnect.models.RequestModel;
+import com.example.denvervolunteerconnect.Models.RequestModel;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.example.denvervolunteerconnect.models;
+package com.example.denvervolunteerconnect.Models;
 
 import utils.Constants;
 

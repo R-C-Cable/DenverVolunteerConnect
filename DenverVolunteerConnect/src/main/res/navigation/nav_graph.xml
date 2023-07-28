@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.denvervolunteerconnect.fragments.BrowsingFragment"
+        android:name="com.example.denvervolunteerconnect.Fragments.BrowsingFragment"
         android:label="@string/main_fragment_label"
         tools:layout="@layout/browsing">
 
@@ -17,12 +17,12 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.denvervolunteerconnect.fragments.RequestManagementFragment"
+        android:name="com.example.denvervolunteerconnect.Fragments.RequestManagementFragment"
         android:label="@string/request_management_fragment_label"
         tools:layout="@layout/request_management">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/RequestManagment_to_BrowsingActivity"
             app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>

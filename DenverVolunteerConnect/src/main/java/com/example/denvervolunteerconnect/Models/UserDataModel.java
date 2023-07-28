@@ -1,6 +1,4 @@
-package com.example.denvervolunteerconnect.models;
-
-import java.util.Objects;
+package com.example.denvervolunteerconnect.Models;
 
 import utils.Constants;
 

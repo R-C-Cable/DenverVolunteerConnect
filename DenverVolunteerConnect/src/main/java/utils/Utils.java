@@ -5,7 +5,7 @@ import android.util.Log;
 import androidx.annotation.AnyThread;
 import androidx.annotation.WorkerThread;
 
-import com.example.denvervolunteerconnect.models.UserDataModel;
+import com.example.denvervolunteerconnect.Models.UserDataModel;
 import com.google.firebase.auth.FirebaseUser;
 
 @AnyThread

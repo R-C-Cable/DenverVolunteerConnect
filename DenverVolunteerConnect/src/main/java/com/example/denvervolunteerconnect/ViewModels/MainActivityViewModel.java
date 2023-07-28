@@ -8,9 +8,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
-import com.example.denvervolunteerconnect.models.RequestModel;
-import com.example.denvervolunteerconnect.models.UserDataModel;
+import com.example.denvervolunteerconnect.Clients.FirebaseDatabaseClient;
+import com.example.denvervolunteerconnect.Models.RequestModel;
+import com.example.denvervolunteerconnect.Models.UserDataModel;
 
 import java.util.ArrayList;
 

@@ -1,19 +1,17 @@
-package com.example.denvervolunteerconnect;
+package com.example.denvervolunteerconnect.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.denvervolunteerconnect.R;
 import com.example.denvervolunteerconnect.ViewModels.MainActivityViewModel;
-import com.example.denvervolunteerconnect.clients.FirebaseDatabaseClient;
-import com.example.denvervolunteerconnect.clients.GoogleAuthClient;
+import com.example.denvervolunteerconnect.Clients.FirebaseDatabaseClient;
+import com.example.denvervolunteerconnect.Clients.GoogleAuthClient;
 
 import androidx.annotation.MainThread;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 
-import androidx.core.view.MenuProvider;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,14 +22,13 @@ import com.example.denvervolunteerconnect.databinding.ActivityMainBinding;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import utils.Constants;
 
 @MainThread
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private MainActivityViewModel mMainActivityViewModel = null;
