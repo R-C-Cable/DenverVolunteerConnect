@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "146442323979",
+    "firebase_url": "https://denvervolunteerconnect-2e275-default-rtdb.firebaseio.com",
     "project_id": "denvervolunteerconnect-2e275",
     "storage_bucket": "denvervolunteerconnect-2e275.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "146442323979-6kjl9kp8tr4mdslcrtvpqouuqmpu64e5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.denvervolunteerconnect",
+            "certificate_hash": "2987b3bf056001430678eb9f407dc1e7d899884e"
+          }
+        },
         {
           "client_id": "146442323979-ducnm4u90o33ms6liq6dpsvi9uh6hqqd.apps.googleusercontent.com",
           "client_type": 3

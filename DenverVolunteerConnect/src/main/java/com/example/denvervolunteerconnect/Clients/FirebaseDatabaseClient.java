@@ -172,7 +172,7 @@ public class FirebaseDatabaseClient {
         });
     }
 
-    public void startVolunteerRequestListInitialUpdate(){
+    public void startVolunteerRequestListUpdate(){
         executorService.submit(() -> {
             ArrayList<RequestModel> localRequestList = new ArrayList<>();
             requestEndPointReference.addValueEventListener(new ValueEventListener() {
@@ -232,10 +232,12 @@ public class FirebaseDatabaseClient {
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                startVolunteerRequestListUpdate();
             }
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                startVolunteerRequestListUpdate();
             }
 
             @Override

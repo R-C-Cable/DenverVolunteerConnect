@@ -98,8 +98,8 @@ public class GoogleAuthClient {
         switch (requestCode) {
             // This is a switch because other cases could be added for other login types.
             case RC_SIGN_IN:
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                 try {
+                    Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                     // Google Sign In was successful, authenticate with Firebase
                     GoogleSignInAccount account = task.getResult(ApiException.class);
                     Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
@@ -108,6 +108,7 @@ public class GoogleAuthClient {
                 } catch (ApiException e) {
                     // Google Sign In failed, update UI appropriately
                     Log.w(TAG, "Google sign in failed", e);
+                    e.printStackTrace();
                 }
                 break;
             default:

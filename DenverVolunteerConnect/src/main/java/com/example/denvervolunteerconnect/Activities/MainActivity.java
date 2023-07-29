@@ -105,8 +105,9 @@ public class MainActivity extends BaseActivity {
         {
             Log.v(TAG, "Logged in Success, posting user data to Firebase.");
         } else {
+
             Log.w(TAG, "Closing application due to failure to login");
-            Toast.makeText(this, "Log In is required to use Denver Volunteer Connect", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Login is required to use Denver Volunteer Connect", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -141,7 +142,7 @@ public class MainActivity extends BaseActivity {
 
     private void authorizeUser() {
         startActivityForResult(mGoogleAuthClient.getSignInIntent(), RC_SIGN_IN);
-        mFirebaseDatabaseClient.startVolunteerRequestListInitialUpdate();
+        mFirebaseDatabaseClient.startVolunteerRequestListUpdate();
         mMainActivityViewModel.startUserDataObserver(this);
         mMainActivityViewModel.startRequestListObserver(this);
     }
