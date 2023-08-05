@@ -6,4 +6,4 @@ Written in Java, using MVVM architecture, Firebase for Google Auth and as a Data
 
 
 Main Screen
-![Screenshot (Aug 5, 2023 5_15_57 PM)](https://github.com/R-C-Cable/DenverVolunteerConnect/assets/77639928/aac35416-269f-4a38-8c37-86b232c1a462)
+![Screenshot (Aug 5, 2023 5_15_57 PM)](https://github.com/R-C-Cable/DenverVolunteerConnect/assets/77639928/dcea0f6b-9c33-4a37-a872-68277bf1d2d4)
