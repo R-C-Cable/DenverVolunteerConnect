@@ -106,9 +106,20 @@ public class GoogleAuthClient {
                     firebaseAuthWithGoogle(account.getIdToken());
                     result = Constants.Integers.RESULT_SUCCESS;
                 } catch (ApiException e) {
-                    // Google Sign In failed, update UI appropriately
-                    Log.w(TAG, "Google sign in failed", e);
-                    e.printStackTrace();
+                    switch (e.getStatusCode()) {
+                        case Constants.Integers.RESULT_NETWORK_ERROR:
+                            result = Constants.Integers.RESULT_NETWORK_ERROR;
+                            // Google Sign In failed to to lack of internet
+                            Log.w(TAG, "Google sign in failed due to lack of internet connection.", e);
+                            e.printStackTrace();
+                            break;
+                        default:
+                            result = Constants.Integers.RESULT_FAILED;
+                            // Google Sign In failed, update UI appropriately
+                            Log.w(TAG, "Google sign in failed", e);
+                            e.printStackTrace();
+                            break;
+                    }
                 }
                 break;
             default:

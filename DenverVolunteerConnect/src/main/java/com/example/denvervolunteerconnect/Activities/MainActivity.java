@@ -100,15 +100,27 @@ public class MainActivity extends BaseActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v(TAG, "onActivityResult");
         super.onActivityResult(requestCode, resultCode, data);
-        if (Constants.Integers.RESULT_SUCCESS
-                == mGoogleAuthClient.handleLogInResult(requestCode, resultCode, data))
-        {
-            Log.v(TAG, "Logged in Success, posting user data to Firebase.");
-        } else {
-
-            Log.w(TAG, "Closing application due to failure to login");
-            Toast.makeText(this, "Login is required to use Denver Volunteer Connect", Toast.LENGTH_SHORT).show();
-            finish();
+        int loginResult = mGoogleAuthClient.handleLogInResult(requestCode, resultCode, data);
+        switch (loginResult) {
+            case Constants.Integers.RESULT_SUCCESS:
+                Log.v(TAG, "Logged in Success, posting user data to Firebase.");
+                break;
+            case Constants.Integers.RESULT_FAILED:
+                Log.w(TAG, "Closing application due to failure to login");
+                Toast.makeText(this, "Login is required to use Denver Volunteer Connect", Toast.LENGTH_SHORT).show();
+                finish();
+                break;
+            case Constants.Integers.RESULT_NETWORK_ERROR:
+                Log.w(TAG, "Closing application due to lack of internet connection.");
+                Toast.makeText(this, "Sorry, Denver Volunteer Connect required a Internet Connection.", Toast.LENGTH_SHORT).show();
+                finish();
+                break;
+            default:
+                Log.e(TAG, "Closing application, due to invalid state.");
+                Toast.makeText(this, "An unexpected error happened, sorry. Try again later.", Toast.LENGTH_SHORT).show();
+                mFirebaseAnalytics.logEvent("invalid_login_state", null);
+                finish();
+                break;
         }
     }
 

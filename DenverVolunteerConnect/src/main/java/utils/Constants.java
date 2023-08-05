@@ -10,5 +10,6 @@ public interface Constants {
         int RESULT_EMPTY = 204;
         int RESULT_FAILED = -1;
         int RESULT_SUCCESS = 0;
+        int RESULT_NETWORK_ERROR = 7;
     }
 }
